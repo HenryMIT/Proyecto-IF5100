@@ -31,7 +31,7 @@ CREATE TABLE chat(
     id_chat SERIAL PRIMARY KEY,
     id_reciver INT,
     id_contact INT,    
-    FOREIGN KEY (id_contact) REFERENCES usr(id_usr)
+    FOREIGN KEY (id_contact) REFERENCES contact(id_contact)
 );
 
 -- Tabla message
