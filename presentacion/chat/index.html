@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interfaz WhatsApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar izquierda -->
+    <div class="sidebar">
+      <div class="header">
+        <div class="profile-pic"></div>
+        <div class="icons">
+          <span>🔍</span>
+          <span>⋮</span>
+        </div>
+      </div>
+      <div class="chats">
+        <div class="chat">
+          <div class="avatar"></div>
+          <div class="chat-info">
+            <h4>Juan</h4>
+            <p>¿Cómo estás?</p>
+          </div>
+        </div>
+        <div class="chat">
+          <div class="avatar"></div>
+          <div class="chat-info">
+            <h4>Ana</h4>
+            <p>Vamos a reunirnos hoy</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Área de chat -->
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="chat-user">
+          <div class="avatar"></div>
+          <h4>Ana</h4>
+        </div>
+        <div class="icons">
+          <span></span>
+          <span></span>
+          <span>⋮</span>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <div class="message sent">¡Hola Ana!</div>
+        <div class="message received">Hola, ¿cómo estás?</div>
+      </div>
+
+      <div class="chat-input">
+        <input type="text" id="inputMessage" placeholder="Escribe un mensaje">
+        <button onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

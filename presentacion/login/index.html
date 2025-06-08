@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CR CHAT - Inicio de Sesión</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="logo">📱 CR CHAT</div>
+      <h2>Inicia sesión en tu cuenta</h2>
+
+      <form onsubmit="return login(event)">
+        <label for="phone">Número de teléfono</label>
+        <input type="tel" id="phone" placeholder="Ej: 60001234" required>
+
+        <label for="password">Clave</label>
+        <input type="password" id="password" placeholder="1234" required>
+
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+
+      <p class="footer-text">¡Gracias por preferirnos!</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
