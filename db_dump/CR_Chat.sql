@@ -1,13 +1,15 @@
 USE CR_Chat;
 
+-- DROP DATABASE IF EXISTS CR_Chat;
+
 -- Tabla usr
 DROP TABLE IF EXISTS usr;
 CREATE TABLE usr (
     id_usr INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
     username VARCHAR(255) NOT NULL,
-    email VARBINARY(50) UNIQUE NOT NULL,
+    email VARBINARY(150) UNIQUE NOT NULL,
     phone_number VARCHAR(20) UNIQUE NOT NULL,
-    pass VARBINARY(20) NOT NULL,
+    pass VARBINARY(64) NOT NULL,
     profile_picture VARCHAR(255) DEFAULT 'default',
     profile_description VARCHAR(255) DEFAULT 'Hey there, I am using CR_Chat',
     deleted BOOLEAN DEFAULT FALSE,
@@ -17,13 +19,23 @@ CREATE TABLE usr (
 -- Tabla contact
 DROP TABLE IF EXISTS contact;
 CREATE TABLE contact (
+    id_contact INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
     id_usr INT NOT NULL,
-    id_contact INT NOT NULL,
     contact_number VARCHAR(20) NOT NULL,
-    contact_name VARCHAR(100),
-    PRIMARY KEY (id_usr, id_contact),
-    FOREIGN KEY (id_usr) REFERENCES usr(id_usr),
-    FOREIGN KEY (id_contact) REFERENCES usr(id_usr)
+    contact_name VARCHAR(100) DEFAULT 'Unknown',
+    deleted BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (id_usr) REFERENCES usr(id_usr)
+);
+
+-- Crear tabla de chats
+DROP TABLE IF EXISTS chat;
+CREATE TABLE chat(
+    id_chat INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_sender INT,
+    id_reciver INT,
+    id_contact INT,
+    FOREIGN KEY (id_contact) REFERENCES contact(id_contact),
+    FOREIGN KEY (id_sender) REFERENCES usr(id_usr)
 );
 
 -- Tabla message
@@ -50,11 +62,9 @@ DROP TABLE IF EXISTS logs_register_client;
 CREATE TABLE logs_register_client (
     id_record INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_usr INT NOT NULL,
-    user_db varchar(100), 
-    creation_date DATE,
-    creation_time TIME,
-    last_session_date DATE,
-    last_session_time TIME,
+    user_db varchar(100),
+    creation_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_session_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     phone_number_change_date DATE,
     deletion_date DATE,
     FOREIGN KEY (id_usr) REFERENCES usr(id_usr)
