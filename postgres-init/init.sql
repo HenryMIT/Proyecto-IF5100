@@ -29,9 +29,11 @@ CREATE TABLE contact (
 
 CREATE TABLE chat(
     id_chat SERIAL PRIMARY KEY,
+    id_sender INT, 
     id_reciver INT,
     id_contact INT,    
     FOREIGN KEY (id_contact) REFERENCES contact(id_contact)
+    FOREIGN KEY (id_sender) REFERENCES usr(id_usr)
 );
 
 -- Tabla message
@@ -86,4 +88,5 @@ CREATE TABLE logs_message (
     FOREIGN KEY (message_affected) REFERENCES message_chat(id_message)
 );
 
--- Crear tabla de chats
+-- Para hacer la encriptación
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
