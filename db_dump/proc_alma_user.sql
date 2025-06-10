@@ -8,7 +8,8 @@ CREATE FUNCTION fn_register_user(
   p_username VARCHAR(255),
   p_email VARCHAR(150),
   p_phone_number VARCHAR(20),
-  p_pass VARCHAR(64)
+  p_pass VARCHAR(64),
+  p_key VARCHAR(255)
 )
 RETURNS INT
 BEGIN
@@ -16,9 +17,8 @@ BEGIN
   DECLARE bin_email VARBINARY(150);
   DECLARE bin_pass VARBINARY(64);
 
-  -- Convertir los valores antes del uso
-  SET bin_email = CONVERT(p_email USING utf8mb4);
-  SET bin_pass = CONVERT(p_pass USING utf8mb4);
+  SET bin_pass = AES_ENCRYPT(p_pass, p_key);
+  SET bin_email = AES_ENCRYPT(p_email, p_key);
 
   -- Verificar si ya existe un usuario con ese email o teléfono
   IF EXISTS (SELECT 1 FROM usr WHERE phone_number = p_phone_number OR email = bin_email) 
@@ -48,13 +48,14 @@ END $$
 -- Procedimiento para verificar si un usuario está autorizado
 CREATE PROCEDURE sp_authorized_user(
   IN p_phone_number VARCHAR(20),
-  IN p_pass VARCHAR(64)
+  IN p_pass VARCHAR(64),
+  IN p_key VARCHAR(255)
 )
 BEGIN
   DECLARE v_id_user INT;
   DECLARE bin_pass VARBINARY(64);
 
-  SET bin_pass = CONVERT(p_pass USING utf8mb4);
+  SET bin_pass = AES_ENCRYPT(p_pass, p_key);
 
   -- Convertimos la contraseña a VARBINARY para comparar con la almacenada
   SELECT id_usr INTO v_id_user
@@ -76,12 +77,12 @@ END $$
 -- Procedimiento para eliminar un usuario
 CREATE PROCEDURE sp_delete_user(
   IN p_id_usr INT,
-  IN p_pass VARCHAR(64)
+  IN p_pass VARCHAR(64),
+  IN p_key VARCHAR(255)
 )
 BEGIN
   DECLARE bin_pass VARBINARY(64);
-
-  SET bin_pass = CONVERT(p_pass USING utf8mb4);
+  SET bin_pass = AES_ENCRYPT(p_pass, p_key);
 
   IF EXISTS (
     SELECT 1 FROM usr
@@ -102,11 +103,13 @@ END $$
 -- Procedimiento para activar un usuario
 CREATE PROCEDURE sp_reactive_User(
   IN p_id_usr INT,
-  IN p_pass VARCHAR(64)
+  IN p_pass VARCHAR(64),
+  IN p_key VARCHAR(255)
 )
 BEGIN
   DECLARE bin_pass VARBINARY(64);
-  SET bin_pass = CONVERT(p_pass USING utf8mb4);
+
+  SET bin_pass = AES_ENCRYPT(p_pass, p_key);
 
   IF EXISTS (
     SELECT 1 FROM usr
@@ -131,11 +134,12 @@ CREATE PROCEDURE sp_update_user(
   IN p_pass VARCHAR(64),
   IN p_phone_number VARCHAR(20),
   IN p_profile_picture VARCHAR(255),
-  IN p_profile_description VARCHAR(255)
+  IN p_profile_description VARCHAR(255),
+  IN p_key VARCHAR(255)
 )
 BEGIN
   DECLARE bin_pass VARBINARY(64);
-  SET bin_pass = CONVERT(p_pass USING utf8mb4);
+  SET bin_pass = AES_ENCRYPT(p_pass, p_key);
 
   IF EXISTS (SELECT 1 FROM usr WHERE id_usr = p_id_usr AND deleted = FALSE) 
   THEN
