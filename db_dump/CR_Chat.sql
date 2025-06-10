@@ -41,9 +41,9 @@ CREATE TABLE chat(
 -- Tabla message
 DROP TABLE IF EXISTS message_chat;
 CREATE TABLE message_chat (
-    id_message INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-    id_usr_sender int NOT NULL,
-    id_usr_receiver int NOT NULL,
+    id_message INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_chat_sender int NOT NULL,
+    id_chat_receiver int NOT NULL,
     shipping_date DATE ,
     shipping_time TIMESTAMP,
     delivery_date DATE,
@@ -53,8 +53,8 @@ CREATE TABLE message_chat (
     deleted BOOLEAN DEFAULT FALSE,
     delivered BOOLEAN,
     seen BOOLEAN,
-    FOREIGN KEY (id_usr_sender) REFERENCES usr(id_usr),
-    FOREIGN KEY (id_usr_receiver) REFERENCES usr(id_usr)
+    FOREIGN KEY (id_chat_sender) REFERENCES chat(id_chat),
+    FOREIGN KEY (id_chat_receiver) REFERENCES chat(id_chat)
 );
 
 -- Tabla logs_register_client

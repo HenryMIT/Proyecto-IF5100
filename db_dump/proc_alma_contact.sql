@@ -11,87 +11,89 @@ CREATE FUNCTION fn_create_contact(
 )
 RETURNS INT
 BEGIN
-    DECLARE v_contact_id INT DEFAULT NULL;
-    DECLARE v_deleted BOOLEAN DEFAULT FALSE;
+    DECLARE v_contact_name VARCHAR(100);
 
     -- Asignar valor por defecto si p_contact_name es NULL
     IF p_contact_name IS NULL THEN
-        SET p_contact_name = 'Unknown';
+        SET v_contact_name = 'Unknown';
+    ELSE
+        SET v_contact_name = p_contact_name;
     END IF;
 
-    -- Verificar si el contacto ya existe
-    SELECT id_contact, deleted
-    INTO v_contact_id, v_deleted
-    FROM contact
-    WHERE id_usr = p_id_usr AND contact_number = p_contact_number
-    LIMIT 1;
-
-    -- Si no existe
-    IF v_contact_id IS NULL 
+    -- Si no existe contacto, insertar y devolver 1
+    IF NOT EXISTS (SELECT 1 FROM contact WHERE id_usr = p_id_usr AND contact_number = p_contact_number) 
     THEN
         INSERT INTO contact (id_usr, contact_number, contact_name, deleted)
-        VALUES (p_id_usr, p_contact_number, p_contact_name, FALSE);
-        RETURN 1;
-
-    -- Si existe pero está eliminado
-    ELSEIF v_deleted = TRUE 
+        VALUES (p_id_usr, p_contact_number, v_contact_name, FALSE);
+        
+    IF EXISTS (SELECT 1 FROM contact WHERE id_usr = p_id_usr AND contact_number = p_contact_number AND deleted = TRUE) 
     THEN
         UPDATE contact
-        SET contact_name = p_contact_name, deleted = FALSE
-        WHERE id_contact = v_contact_id;
+        SET contact_name = v_contact_name, deleted = FALSE
+        WHERE id_usr = p_id_usr AND contact_number = p_contact_number;
         RETURN 1;
-
-    -- Ya existe y no está eliminado
-    ELSE
-        RETURN 0;
     END IF;
-END $$
+        UPDATE contact
+        SET contact_name = v_contact_name, deleted = FALSE
+        WHERE id_usr = p_id_usr AND contact_number = p_contact_number;
+        RETURN 1;
+    END IF;
 
+    -- Si existe y no está eliminado, devolver 0
+    RETURN 0;
+END $$
 
 -- FUNCIÓN PARA CREAR CHAT
 CREATE FUNCTION fn_create_chat(
-    p_id_contact INT
+    p_id_contact_sender INT,
+    p_id_contact_receiver INT
 )
 RETURNS INT
 BEGIN
-    DECLARE v_contact_number VARCHAR(20);
-    DECLARE v_id_usr_contact INT;
-    DECLARE v_chat_id INT;
+    DECLARE v_contact_number_sender VARCHAR(20);
+    DECLARE v_contact_number_receiver VARCHAR(20);
+    DECLARE id_user_sender INT;
+    DECLARE id_user_receiver INT;
 
-    -- Obtener el número de contacto
-    SELECT contact_number INTO v_contact_number
+    -- Verificar si existen ambos contactos
+    IF NOT EXISTS (SELECT 1 FROM contact WHERE id_contact = p_id_contact_sender) 
+        OR NOT EXISTS (SELECT 1 FROM contact WHERE id_contact = p_id_contact_receiver) 
+    THEN
+        RETURN 0;
+    END IF;
+
+    -- Obtener el número y usuario dueño del contacto sender
+    SELECT contact_number, id_usr
+    INTO v_contact_number_sender, id_user_sender
     FROM contact
-    WHERE id_contact = p_id_contact;
+    WHERE id_contact = p_id_contact_sender;
 
-    IF v_contact_number IS NULL 
+    -- Obtener el número y usuario dueño del contacto receiver
+    SELECT contact_number, id_usr
+    INTO v_contact_number_receiver, id_user_receiver
+    FROM contact
+    WHERE id_contact = p_id_contact_receiver;
+
+    -- Verificar si los datos son válidos
+    IF v_contact_number_sender IS NULL OR id_user_sender IS NULL 
+        OR v_contact_number_receiver IS NULL OR id_user_receiver IS NULL
     THEN
         RETURN 0;
     END IF;
 
-    -- Buscar el usuario con ese número
-    SELECT id_usr INTO v_id_usr_contact
-    FROM usr
-    WHERE phone_number = v_contact_number;
-
-    IF v_id_usr_contact IS NULL 
-    THEN
-        RETURN 0;
-    END IF;
-
-    -- Verificar si ya existe el chat
-    SELECT id_chat INTO v_chat_id
-    FROM chat
-    WHERE id_contact = p_id_contact
-    LIMIT 1;
-
-    IF v_chat_id IS NOT NULL 
+    -- Verificar si ya existe el chat entre estos dos contactos
+    IF EXISTS (
+        SELECT 1 FROM chat 
+        WHERE (id_sender = id_user_sender AND id_reciver = id_user_receiver)
+           OR (id_sender = id_user_receiver AND id_reciver = id_user_sender)
+    ) 
     THEN
         RETURN 0;
     END IF;
 
     -- Insertar el chat
-    INSERT INTO chat (id_contact, id_sender)
-    VALUES (p_id_contact, v_id_usr_contact);
+    INSERT INTO chat (id_contact, id_sender, id_reciver)
+    VALUES (p_id_contact_sender, id_user_sender, id_user_receiver);
 
     RETURN 1;
 END $$
@@ -133,19 +135,18 @@ CREATE PROCEDURE sp_update_contact(
 )
 BEGIN
     -- Verificar existencia
-    IF NOT EXISTS (SELECT 1 FROM contact WHERE id_contact = p_id_contact) 
-    THEN
+    IF EXISTS (SELECT 1 FROM contact WHERE id_contact = p_id_contact) THEN
+        -- Actualizar campos
+        UPDATE contact
+        SET
+            contact_number = CASE WHEN p_phone_contact IS NOT NULL THEN p_phone_contact ELSE contact_number END,
+            contact_name = CASE WHEN p_contact_name IS NOT NULL THEN p_contact_name ELSE contact_name END
+        WHERE id_contact = p_id_contact;
+
+        SELECT 1 AS result;
+    ELSE
         SELECT 0 AS result;
     END IF;
-
-    -- Actualizar campos
-    UPDATE contact
-    SET
-        contact_number = CASE WHEN p_phone_contact IS NOT NULL THEN p_phone_contact ELSE contact_number END,
-        contact_name = CASE WHEN p_contact_name IS NOT NULL THEN p_contact_name ELSE contact_name END
-    WHERE id_contact = p_id_contact;
-
-    SELECT 1 AS result;
 END $$
 
 
@@ -154,24 +155,17 @@ CREATE PROCEDURE sp_deleted_contact(
     IN p_id_contact INT
 )
 BEGIN
-    DECLARE v_deleted BOOLEAN;
-
-    -- Obtener estado
-    SELECT deleted INTO v_deleted
-    FROM contact
-    WHERE id_contact = p_id_contact;
-
-    IF v_deleted IS NULL 
-    THEN
-        SELECT 0 AS result;
-    ELSEIF v_deleted = TRUE 
-    THEN
+    IF NOT EXISTS (SELECT 1 FROM contact WHERE id_contact = p_id_contact) THEN
         SELECT 0 AS result;
     ELSE
-        UPDATE contact
-        SET deleted = TRUE
-        WHERE id_contact = p_id_contact;
-        SELECT 1 AS result;
+        IF EXISTS (SELECT 1 FROM contact WHERE id_contact = p_id_contact AND deleted = TRUE) THEN
+            SELECT 0 AS result;
+        ELSE
+            UPDATE contact
+            SET deleted = TRUE
+            WHERE id_contact = p_id_contact;
+            SELECT 1 AS result;
+        END IF;
     END IF;
 END $$
 
