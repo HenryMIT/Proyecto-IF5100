@@ -3,6 +3,7 @@
 -- DROP DATABASE IF EXISTS "CR_Chat";
 
 CREATE USER Clients WITH PASSWORD 'client2025';
+GRANT CONNECT ON DATABASE CR_Chat TO Clients;
 
 -- Tabla usr
 CREATE TABLE usr (
@@ -32,8 +33,9 @@ CREATE TABLE chat(
     id_sender INT, 
     id_reciver INT,
     id_contact INT,    
-    FOREIGN KEY (id_contact) REFERENCES contact(id_contact)
-    FOREIGN KEY (id_sender) REFERENCES usr(id_usr)
+    FOREIGN KEY (id_contact) REFERENCES contact(id_contact),
+    FOREIGN KEY (id_sender) REFERENCES usr(id_usr),
+    FOREIGN KEY (id_reciver) REFERENCES usr(id_usr)
 );
 
 -- Tabla message
@@ -41,10 +43,8 @@ CREATE TABLE message_chat (
     id_message SERIAL PRIMARY KEY,
     id_chat_sender int NOT NULL,
     id_chat_receiver int NOT NULL,
-    shipping_date DATE,
-    shipping_time TIMESTAMP,
-    delivery_date DATE,
-    delivery_time TIMESTAMP,
+    shipping_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    
+    delivery_date TIMESTAMP,   
     media_content VARCHAR(255),
     text_message BYTEA not null, -- encrypted 
     deleted BOOLEAN DEFAULT FALSE,
@@ -59,10 +59,8 @@ CREATE TABLE logs_register_client (
     id_record SERIAL PRIMARY KEY,
     id_usr INT NOT NULL,
     user_db varchar(100) DEFAULT CURRENT_USER, 
-    creation_date DATE DEFAULT CURRENT_DATE,
-    creation_time TIME DEFAULT CURRENT_TIME,
-    last_session_date DATE DEFAULT CURRENT_DATE,
-    last_session_time TIME DEFAULT CURRENT_TIME,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     phone_number_change_date DATE,
     deletion_date DATE,
     FOREIGN KEY (id_usr) REFERENCES usr(id_usr)
