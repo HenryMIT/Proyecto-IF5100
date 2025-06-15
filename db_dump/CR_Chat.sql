@@ -5,7 +5,7 @@ USE CR_Chat;
 -- Tabla usr
 DROP TABLE IF EXISTS usr;
 CREATE TABLE usr (
-    id_usr INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+    id_user INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
     username VARCHAR(255) NOT NULL,
     email VARBINARY(150) UNIQUE NOT NULL,
     phone_number VARCHAR(20) UNIQUE NOT NULL,
@@ -20,11 +20,11 @@ CREATE TABLE usr (
 DROP TABLE IF EXISTS contact;
 CREATE TABLE contact (
     id_contact INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-    id_usr INT NOT NULL,
+    id_user INT NOT NULL,
     contact_number VARCHAR(20) NOT NULL,
     contact_name VARCHAR(100) DEFAULT 'Unknown',
     deleted BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (id_usr) REFERENCES usr(id_usr)
+    FOREIGN KEY (id_user) REFERENCES usr(id_user)
 );
 
 -- Crear tabla de chats
@@ -32,10 +32,10 @@ DROP TABLE IF EXISTS chat;
 CREATE TABLE chat(
     id_chat INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_sender INT,
-    id_reciver INT,
+    id_receiver INT,
     id_contact INT,
     FOREIGN KEY (id_contact) REFERENCES contact(id_contact),
-    FOREIGN KEY (id_sender) REFERENCES usr(id_usr)
+    FOREIGN KEY (id_sender) REFERENCES usr(id_user)
 );
 
 -- Tabla message
@@ -44,10 +44,8 @@ CREATE TABLE message_chat (
     id_message INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_chat_sender int NOT NULL,
     id_chat_receiver int NOT NULL,
-    shipping_date DATE ,
-    shipping_time TIMESTAMP,
-    delivery_date DATE,
-    delivery_time TIMESTAMP,
+    shipping_date TIMESTAMP DEFAULT now(),
+    delivery_date TIMESTAMP,
     media_content VARCHAR(255),
     text_message BLOB not null, -- encrypted 
     deleted BOOLEAN DEFAULT FALSE,
@@ -61,13 +59,13 @@ CREATE TABLE message_chat (
 DROP TABLE IF EXISTS logs_register_client;
 CREATE TABLE logs_register_client (
     id_record INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id_usr INT NOT NULL,
+    id_user INT NOT NULL,
     user_db varchar(100),
     creation_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_session_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     phone_number_change_date DATE,
     deletion_date DATE,
-    FOREIGN KEY (id_usr) REFERENCES usr(id_usr)
+    FOREIGN KEY (id_user) REFERENCES usr(id_user)
 );
 
 -- Tabla logs_client
@@ -78,7 +76,7 @@ CREATE TABLE logs_client (
     user_affected INT,
     date_log DATE,
     details TEXT,
-    FOREIGN KEY (user_affected) REFERENCES usr(id_usr)
+    FOREIGN KEY (user_affected) REFERENCES usr(id_user)
 );
 
 -- Tabla logs_message

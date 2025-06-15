@@ -32,7 +32,7 @@ BEGIN
             -- Crear contacto si no existe
             IF NOT EXISTS (
                 SELECT 1 FROM contact 
-                WHERE id_user = p_id_receiver AND phone_number = v_user_number
+                WHERE id_user = p_id_receiver AND contact_number = v_user_number
             ) THEN
                 INSERT INTO contact(id_user, contact_number)
                 VALUES(p_id_receiver, v_user_number)
@@ -43,7 +43,7 @@ BEGIN
             IF v_id_contact IS NULL THEN
                 SELECT id_contact INTO v_id_contact
                 FROM contact
-                WHERE id_user = p_id_receiver AND phone_number = v_user_number
+                WHERE id_user = p_id_receiver AND contact_number = v_user_number
                 LIMIT 1;
             END IF;
 
@@ -64,7 +64,9 @@ BEGIN
             RETURN 0;
     END;
 END;
-$$;
+$$
+SECURITY DEFINER;
+
 
 CREATE TEMP TABLE chats(
     id_chat INT,
@@ -74,7 +76,7 @@ CREATE TEMP TABLE chats(
 );
 
 CREATE OR REPLACE PROCEDURE sp_load_chat(
-    IN p_id_usr INT    
+    IN p_id_user INT    
 )
 LANGUAGE plpgsql
 AS $$
@@ -89,31 +91,45 @@ BEGIN
         WHERE mc.shipping_time >= CURRENT_DATE - INTERVAL '5 days'
         GROUP BY mc.id_chat_receiver
     ) ult ON ult.id_chat_receiver = c.id_chat
-    WHERE c.id_reciver = :p_id_usr
+    WHERE c.id_reciver = p_id_user
     ORDER BY ult.ultimo_mensaje DESC
     LIMIT 15;
 
 END;
-$$;
+$$
+SECURITY DEFINER;
 
-
-CREATE OR REPLACE PROCEDURE sp_load_message(
-    IN p_id_chat INT
+CREATE OR REPLACE FUNCTION fn_load_message(
+    p_id_chat INT,
+    p_key VARCHAR
+)
+RETURNS TABLE (
+    id_message INT,
+    id_chat_sender INT,
+    id_chat_receiver INT,
+    shipping_date TIMESTAMP,
+    delivery_date TIMESTAMP,
+    media_content VARCHAR,
+    text_message TEXT,
+    deleted BOOLEAN,
+    delivered BOOLEAN,
+    seen BOOLEAN
 )
 LANGUAGE plpgsql
+
 AS $$
 BEGIN
-    INSERT INTO messages_temp(id_message, id_chat_sender, id_chat_receiver, shipping_date,
-                              delivery_date, media_content, text_message, deleted, delivered, seen)
-    SELECT id_message, id_chat_sender, id_chat_receiver, shipping_date,
-           delivery_date, media_content, text_message, deleted, delivered, seen
-    FROM message_chat
-    WHERE (id_chat_sender = p_id_chat OR id_chat_receiver = p_id_chat)
-      AND deleted = FALSE
+    RETURN QUERY
+    SELECT m.id_message, m.id_chat_sender, m.id_chat_receiver, m.shipping_date,
+           m.delivery_date, m.media_content, pgp_sym_decrypt(m.text_message, p_key)::TEXT, m.deleted, m.delivered, m.seen
+    FROM message_chat AS m
+    WHERE (m.id_chat_sender = p_id_chat OR m.id_chat_receiver = p_id_chat)
+      AND m.deleted = FALSE
     ORDER BY shipping_date DESC
     LIMIT 15;
 END;
-$$;
+$$
+SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION fn_edit_message(
     p_id_message INT,
@@ -134,7 +150,8 @@ BEGIN
         RETURN 0;
     END IF;
 END;
-$$;
+$$
+SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION fn_deleted_message(
     p_id_message INT
@@ -153,7 +170,8 @@ BEGIN
         RETURN 0;
     END IF;
 END;
-$$;
+$$
+SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION fn_mark_delivered(
     p_id_message INT
@@ -173,7 +191,8 @@ BEGIN
         RETURN 0;
     END IF;
 END;
-$$;
+$$
+SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION fn_mark_seen(
     p_id_message INT
@@ -192,8 +211,8 @@ BEGIN
         RETURN 0;
     END IF;
 END;
-$$;
-
+$$
+SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION fn_logs_message_trigger()
 RETURNS TRIGGER
