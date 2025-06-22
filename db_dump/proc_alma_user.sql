@@ -148,13 +148,13 @@ BEGIN
 END$$
 
 
-CREATE PROCEDURE sp_update_user(
+CREATE OR REPLACE PROCEDURE sp_update_user(
   IN p_id_user INT,
   IN p_username VARCHAR(255),
   IN p_pass VARCHAR(64),
   IN p_phone_number VARCHAR(20),
   IN p_profile_picture VARCHAR(255),
-  IN p_profile_description VARCHAR(255),
+  IN p_profile_description VARCHAR(255),  
   IN p_key VARCHAR(255)
 )
 BEGIN
@@ -188,6 +188,39 @@ BEGIN
   END IF;
 END$$
 
+
+CREATE PROCEDURE sp_verify_tokens(
+    IN p_id_user INT,
+    IN p_tkr VARCHAR(255)
+)
+BEGIN
+    IF EXISTS ( SELECT 1 FROM usr WHERE id_user = p_id_user AND tkR = p_tkr ) THEN
+        SELECT 1 AS result;
+    ELSE
+        SELECT 0 AS result;
+    END IF;
+END$$
+
+CREATE PROCEDURE sp_update_tkr(
+    IN p_id_user INT,
+    IN p_tkr VARCHAR(255)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT -1 AS result; -- Error durante el update
+    END;
+
+    START TRANSACTION;
+
+    UPDATE usr
+    SET tkR = p_tkr
+    WHERE id_user = p_id_user;
+
+    COMMIT;
+    SELECT 1 AS result; -- Éxito
+END$$
 
 CREATE TRIGGER trigger_logs_register_client AFTER UPDATE ON usr FOR EACH ROW
 BEGIN
