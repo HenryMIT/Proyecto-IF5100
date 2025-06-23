@@ -32,10 +32,10 @@ BEGIN
 
     RETURN new_id;
 
-EXCEPTION 
-    WHEN OTHERS THEN              
-        RAISE NOTICE 'Transaction canceled: %', SQLERRM;
-        RETURN -1;
+    EXCEPTION 
+        WHEN OTHERS THEN              
+            RAISE NOTICE 'Transaction canceled: %', SQLERRM;
+            RETURN -1;
 END;
 $$
 SECURITY DEFINER;;
@@ -155,9 +155,10 @@ SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION fn_update_user(
     p_id_user INT,
     p_username VARCHAR,
-    p_pass VARCHAR,    
+    p_pass VARCHAR,
+    p_phone_number VARCHAR,    
     p_profile_picture VARCHAR,
-    p_profile_description VARCHAR, 
+    p_profile_description VARCHAR,     
     p_key VARCHAR
 )
 RETURNS INT
@@ -174,6 +175,9 @@ BEGIN
         END,        
         pass = CASE 
             WHEN p_pass IS NOT NULL AND p_pass <> '' THEN pgp_sym_encrypt(p_pass, p_key) ELSE pass
+        END,
+        p_phone_number = CASE 
+            WHEN p_phone_number IS NOT NULL AND p_phone_number <> '' THEN p_phone_number ELSE phone_number
         END,        
         profile_picture = CASE 
             WHEN p_profile_picture IS NOT NULL AND p_profile_picture <> '' THEN p_profile_picture ELSE profile_picture
@@ -184,6 +188,42 @@ BEGIN
         WHERE id_user = p_id_user;
         RETURN 1;
     END IF;
+END;
+$$
+SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION fn_verify_tokens(
+    p_id_user INT,
+    p_tkr VARCHAR
+)
+RETURNS INT 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF EXISTS(SELECT 1 FROM usr WHERE id_user = p_id_user AND tkr = p_tkr) THEN 
+        RETURN 1;
+    ELSE 
+        RETURN 0;
+    END IF;
+END;
+$$
+SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION fn_update_tkr(
+    p_id_user INT,
+    p_tkr VARCHAR
+)
+RETURNS INT 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE usr SET tkr = p_tkr WHERE id_user = p_id_user;
+    RETURN 1;
+
+    EXCEPTION 
+        WHEN OTHERS THEN              
+            RAISE NOTICE 'Transaction canceled: %', SQLERRM;
+            RETURN -1;
 END;
 $$
 SECURITY DEFINER;

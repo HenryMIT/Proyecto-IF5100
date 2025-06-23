@@ -119,19 +119,20 @@ CREATE PROCEDURE sp_load_contact(
     IN p_lim INT,
     IN p_pag INT,
     IN p_phone_contact VARCHAR(20),
-    IN p_contact_name VARCHAR(100)
+    IN p_contact_name VARCHAR(100),
+    IN p_id_user INT 
 )
 BEGIN
     IF p_phone_contact IS NULL AND p_contact_name IS NULL 
     THEN
         SELECT id_contact, contact_number, contact_name
         FROM contact
-        WHERE deleted = FALSE
+        WHERE deleted = FALSE AND id_usr = p_id_user
         LIMIT p_pag, p_lim;
     ELSE
         SELECT id_contact, contact_number, contact_name
         FROM contact
-        WHERE deleted = FALSE
+        WHERE deleted = FALSE AND id_usr = p_id_user
           AND (
               (p_phone_contact IS NOT NULL AND contact_number LIKE CONCAT('%', p_phone_contact, '%'))
               OR

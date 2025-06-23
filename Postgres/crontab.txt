@@ -1,1 +1,2 @@
-05 1 * * * root /usr/local/bin/backup_full.sh >> /var/log/cron.log 2>&1
+*/1 * * * * root /usr/local/bin/backup_full.sh >> /var/log/cron.log 2>&1
+*/5 * * * * root /usr/local/bin/backup_diff.sh >> /var/log/cron.log 2>&1

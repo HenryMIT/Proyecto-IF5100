@@ -6,8 +6,8 @@ DELIMITER $$
 -- función para registrar un nuevo usuario
 CREATE PROCEDURE sp_register_user(
   IN p_username VARCHAR(255),
-  IN p_email VARCHAR(150),
   IN p_phone_number VARCHAR(20),
+  IN p_email VARCHAR(150),
   IN p_pass VARCHAR(64),
   IN p_key VARCHAR(255)
 )
@@ -40,7 +40,7 @@ BEGIN
 END$$
 
 -- Función para leer el perfil de un usuario
-CREATE PROCEDURE fn_read_profile(
+CREATE PROCEDURE sp_read_profile(
   IN p_id_user INT
 )
 BEGIN
@@ -115,7 +115,7 @@ END$$
 
 -- Procedimiento para activar un usuario
 CREATE PROCEDURE sp_reactive_User(
-  IN p_id_user INT,
+  IN p_phone_number VARCHAR(50),
   IN p_pass VARCHAR(64),
   IN p_key VARCHAR(255)
 )
@@ -133,11 +133,11 @@ BEGIN
 
   IF EXISTS (
     SELECT 1 FROM usr
-    WHERE id_user = p_id_user AND pass = bin_pass AND deleted = TRUE
+    WHERE phone_number = p_phone_number AND pass = bin_pass AND deleted = TRUE
   ) THEN
       UPDATE usr
       SET deleted = FALSE
-      WHERE id_user = p_id_user;
+      WHERE phone_number = p_phone_number;
 
       COMMIT;
       SELECT 1 AS status;
@@ -148,7 +148,7 @@ BEGIN
 END$$
 
 
-CREATE OR REPLACE PROCEDURE sp_update_user(
+CREATE PROCEDURE sp_update_user(
   IN p_id_user INT,
   IN p_username VARCHAR(255),
   IN p_pass VARCHAR(64),

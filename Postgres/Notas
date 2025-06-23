@@ -1,0 +1,3 @@
+crontab /etc/cron.d/pgbackrest-diff
+crontab /etc/cron.d/backup_full
+psql -h serverPG -U admin -d CR_Chat -f /backup/pg_2025-06-21_0805.sql

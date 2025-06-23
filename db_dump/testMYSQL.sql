@@ -1,62 +1,75 @@
+USE CR_Chat;
+
 -- Usuario 1
-SELECT * FROM fn_register_user(
+CALL sp_register_user(
   'Juan Perez',
+  'juan@mail.com', 
   '1234567890',
-  'juan@mail.com',
   'password123',
   'clientdecryption2025!'
 );
 
 -- Usuario 2
-SELECT * FROM fn_register_user(
+CALL sp_register_user(
   'Maria Lopez',
-  '3216549870',
   'maria@mail.com',
+  '3216549870',
   'maria456',
   'clientdecryption2025!'
 );
 
 -- Usuario 3
-SELECT * FROM fn_register_user(
+CALL sp_register_user(
   'Carlos Ruiz',
-  '7894561230',
   'carlos@mail.com',
+  '7894561230',
   'carlos789',
   'clientdecryption2025!'
 );
 
 -- Usuario 4
-SELECT * FROM fn_register_user(
+CALL sp_register_user(
   'Ana Torres',
-  '1472583690',
   'ana@mail.com',
+  '1472583690',
   'ana321',
   'clientdecryption2025!'
 );
 
 -- Usuario 5
-SELECT * FROM fn_register_user(
+CALL sp_register_user(
   'Luis Gómez',
-  '9638527410',
   'luis@mail.com',
+  '9638527410',
   'luis654',
   'clientdecryption2025!'
-);
+); 
+
 
 -- Usuario 6
-SELECT * FROM fn_register_user(
+CALL sp_register_user(
   'Lucía Ramos',
-  '5556667777',
   'lucia@mail.com',
+  '5556667777',
   'lucia987',
   'clientdecryption2025!'
 );
 
 -- Usuario 7
-SELECT * FROM fn_register_user(
+CALL sp_register_user(
   'Andrés Márquez',
-  '4445556666',
   'andres@mail.com',
+  '4445556666',
   'andres159',
+  'clientdecryption2025!'
+);
+
+CALL sp_update_user(
+  1,
+  'Juan Actualizado',
+  'nuevaClave123',
+  '0987654321',
+  'path/to/new/profile.jpg',
+  NULL,
   'clientdecryption2025!'
 );
