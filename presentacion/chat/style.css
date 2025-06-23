@@ -183,5 +183,25 @@ body {
     text-align: center;
 }
 
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-top h2 {
+    color: white;
+    font-size: 22px;
+}
+
+.header-top img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+
 
 

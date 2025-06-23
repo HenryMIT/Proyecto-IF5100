@@ -10,9 +10,12 @@
         <!-- Sidebar with chat list -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>CR Chat</h2>
+                <div class="header-top">
+                    <h2>CR Chat</h2>
+                    <img id="userPhoto" src="default-profile.png" alt="Profile Photo">
+                </div>
                 <button onclick="toggleProfile()">My Profile</button>
-                <button>Add Contact</button>
+                <button onclick="window.location.href='contact.html'">Add Contact</button>
             </div>
             <div class="chat-list">
                 <div class="chat-item">
@@ -46,18 +49,21 @@
             </div>
         </div>
     </div>
+    <script>
+        // Show profile photo if it exists
+        const userPhoto = document.getElementById('userPhoto');
+        if (userPhoto) {
+            const storedPhoto = localStorage.getItem('profilePhoto');
+            if (storedPhoto) {
+                userPhoto.src = storedPhoto;
+            }
+        }
 
-    <!-- Profile Modal -->
-    <div class="profile-modal" id="profileModal">
-        <div class="profile-content">
-            <h3>My Profile</h3>
-            <p><strong>Username:</strong> Henry Gonzalez</p>
-            <p><strong>Email:</strong> Henrygonza3@gmail.com</p>
-            <p><strong>Phone:</strong> 61667580</p>
-            <button onclick="toggleProfile()">Close</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+        // Toggle profile modal
+        function toggleProfile() {
+            const modal = document.getElementById('profileModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+    </script>
 </body>
 </html>
