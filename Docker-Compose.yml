@@ -1,6 +1,6 @@
 services:
 
-  mysql: 
+  serverMYSQL: 
     image: mysql:latest
     container_name: serverMYSQL
     environment:
@@ -12,41 +12,25 @@ services:
       - ./mysql:/var/lib/mysql
       - ./db_dump:/docker-entrypoint-initdb.d
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
-    ports:
-      - 8080:80
-    environment:
-      - PMA_HOST=mysql
-      - PMA_PORT=3306
-  
-  postgres:
-    image: postgres:latest
+  serverPG:
+    image: cr_chat_postgresql
     container_name: serverPG
     environment:
+      - POSTGRES_DB=CR_Chat
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=CR_Chat
+    build:
+      context: .
+      dockerfile: ./Postgres/Dockerfile
     ports:
       - 5432:5432
-    volumes:
-      - ./postgreData:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    restart: always
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@example.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
-      - PGADMIN_CONFIG_SERVER_MODE=False
-      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False    
-    ports:
-      - 5050:80
-    depends_on:
-      - postgres
-    
+    volumes:      
+      - ./Postgres/postgreData:/var/lib/postgresql/data
+      - ./Postgres/postgres-init:/docker-entrypoint-initdb.d
+      - ./Postgres/backup:/backup
+      - ./Postgres/logs:/var/log
+
+  
   web-datos:
     container_name: servidor-datos
     volumes:
@@ -58,8 +42,8 @@ services:
     ports:
       - 8000:80
     depends_on:
-      - postgres
-      - mysql
+      - serverPG
+      - serverMYSQL
 
 volumes:
   postgres:
