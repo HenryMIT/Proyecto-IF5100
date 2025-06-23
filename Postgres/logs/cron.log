@@ -204,3 +204,15 @@ Password:
 pg_dump: error: connection to server at "serverPG" (172.19.0.3), port 5432 failed: fe_sendauth: no password supplied
 Password: 
 pg_dump: error: connection to server at "serverPG" (172.19.0.3), port 5432 failed: fe_sendauth: no password supplied
+Password: 
+pg_dump: error: connection to server at "serverPG" (172.19.0.3), port 5432 failed: fe_sendauth: no password supplied
+Password: 
+pg_dump: error: connection to server at "serverPG" (172.19.0.3), port 5432 failed: fe_sendauth: no password supplied
+Password: 
+pg_dump: error: connection to server at "serverPG" (172.19.0.3), port 5432 failed: fe_sendauth: no password supplied
+Password: 
+pg_dump: error: connection to server at "serverPG" (172.19.0.3), port 5432 failed: fe_sendauth: no password supplied
+Password: 
+pg_dump: error: connection to server at "serverPG" (172.19.0.3), port 5432 failed: fe_sendauth: no password supplied
+Password: 
+pg_dump: error: connection to server at "serverPG" (172.19.0.3), port 5432 failed: fe_sendauth: no password supplied

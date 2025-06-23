@@ -114,24 +114,4 @@ class Usr extends Autenticar
         return $response->withStatus($status);
     }
 
-    private function editarUsuario(string $idUsuario, int $rol = -1, string $passw = "")
-    {
-        $sql = $rol == -1 ? "CALL passwUsuario(:idUsuario, :passw);" : "CALL rolUsuario(:idUsuario, :rol);";
-        $con = $this->container->get('base_datos');
-        $query = $con->prepare($sql);
-
-        $query->bindValue(":idUsuario", $idUsuario, PDO::PARAM_STR);
-        if ($passw != "") {
-            $query->bindValue(":passw", $passw, PDO::PARAM_STR);
-        } else {
-            $query->bindValue(":rol", $rol, PDO::PARAM_INT);
-        }
-
-        $query->execute();
-        $afec = $query->rowCount();
-        $query = null;
-        $con = null;
-
-        return $afec;
-    }
 }
