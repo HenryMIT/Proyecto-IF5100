@@ -1,15 +1,19 @@
-function login(event) {
-  event.preventDefault();
-  
-  const phone = document.getElementById("phone").value.trim();
-  const password = document.getElementById("password").value.trim();
+// Validación simple para el formulario
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const usuario = document.getElementById('usuario').value;
+    const clave = document.getElementById('clave').value;
 
-  if (phone === "60001234" && password === "1234") {
-    alert("Inicio de sesión exitoso 🎉");
-    window.location.href = "../chat/index.html"; // Aquí iría la interfaz principal de chat
-  } else {
-    alert("Número o clave incorrectos.");
-  }
+    if (usuario.trim() === '' || clave.trim() === '') {
+        alert('Please, complete all fields.');
+    } else {
+        alert('Logging in...'); // Aquí luego podrías redirigir o validar con backend
+    }
+});
 
-  return false;
+
+// Acción del botón registrarse
+function registrarse() {
+    alert('Redirecting to the registration form...');
+    // Aquí podrías cambiar location.href = 'registro.html';
 }
