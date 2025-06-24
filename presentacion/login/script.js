@@ -17,3 +17,8 @@ function registrarse() {
     alert('Redirecting to the registration form...');
     // Aquí podrías cambiar location.href = 'registro.html';
 }
+
+function goToSignUp() {
+    window.location.href = "../signUp/signUp.html";
+}
+

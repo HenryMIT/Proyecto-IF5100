@@ -1,50 +1,42 @@
-// Handle login form
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const user = document.getElementById('usuario').value;
-        const pass = document.getElementById('clave').value;
+// Submit registration and call API
+document.getElementById("registerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-        if (user.trim() === '' || pass.trim() === '') {
-            alert('Please fill in all fields.');
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone_number = document.getElementById("phone_number").value.trim();
+    const pass = document.getElementById("pass").value;
+
+    if (!username || !email || !phone_number || !pass) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    fetch("http://localhost:8000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, phone_number, pass })
+    })
+    .then(res => {
+        if (res.status === 201) {
+            alert("Registration successful!");
+            window.location.href = "../login.html";
+        } else if (res.status === 409) {
+            alert("User already exists.");
         } else {
-            alert('Logging in...');
-            // window.location.href = 'chat.html'; // future use
+            alert("Registration failed. Please try again.");
         }
+    })
+    .catch(err => {
+        console.error("Fetch error:", err);
+        alert("Could not connect to server.");
     });
-}
+});
 
-// Handle sign up form
-const signupForm = document.getElementById('signupForm');
-if (signupForm) {
-    signupForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const password = document.getElementById('password').value;
-
-        if (
-            username.trim() === '' ||
-            email.trim() === '' ||
-            phone.trim() === '' ||
-            password.trim() === ''
-        ) {
-            alert('Please complete all fields before submitting.');
-        } else {
-            alert('Registration form completed. (No action yet)');
-        }
-    });
-}
 
 // Button to go back to login
 function goBack() {
-    window.location.href = 'login.html';
+    window.location.href = '../login/login.html';
 }
 
-// From login.html: trigger signup window
-function registrarse() {
-    window.location.href = 'signUp.html';
-}
+
