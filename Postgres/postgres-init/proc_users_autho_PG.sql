@@ -284,10 +284,3 @@ AFTER UPDATE ON usr
 FOR EACH ROW
 EXECUTE FUNCTION fn_update_logs();
 
--- Se le otorga permisos al usuario de utilizar las funciones y sp
-GRANT EXECUTE ON FUNCTION fn_register_user(VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR) TO Clients;
-GRANT EXECUTE ON FUNCTION fn_read_profile(INT) TO Clients;
-GRANT EXECUTE ON FUNCTION fn_authorized_User(VARCHAR, VARCHAR, VARCHAR) TO Clients;
-GRANT EXECUTE ON FUNCTION fn_deleted_user(INT, VARCHAR, VARCHAR) TO Clients;
-GRANT EXECUTE ON FUNCTION fn_reactive_User(VARCHAR, VARCHAR, VARCHAR) TO Clients;
-GRANT EXECUTE ON FUNCTION fn_update_user(INT, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR) TO Clients;
