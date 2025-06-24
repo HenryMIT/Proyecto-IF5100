@@ -68,25 +68,31 @@ $$
 SECURITY DEFINER;
 
 
-CREATE TEMP TABLE chats(
+CREATE OR REPLACE FUNCTION fn_load_chat(
+    p_id_user INT
+)
+RETURNS TABLE (
     id_chat INT,
-    id_sender INT, 
+    id_sender INT,
     id_reciver INT,
-    id_contact INT
-);
-
-CREATE OR REPLACE PROCEDURE sp_load_chat(
-    IN p_id_user INT    
+    id_contact INT,
+    ultimo_mensaje TIMESTAMP
 )
 LANGUAGE plpgsql
 AS $$
-BEGIN 
-
-    INSERT INTO chats
-    SELECT id_chat, id_sender, id_reciver, id_contact    
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.id_chat,
+        c.id_sender,
+        c.id_reciver,
+        c.id_contact,
+        ult.ultimo_mensaje
     FROM chat c
     JOIN (
-        SELECT mc.id_chat_receiver, MAX(mc.shipping_time) AS ultimo_mensaje
+        SELECT 
+            mc.id_chat_receiver, 
+            MAX(mc.shipping_time) AS ultimo_mensaje
         FROM message_chat mc
         WHERE mc.shipping_time >= CURRENT_DATE - INTERVAL '5 days'
         GROUP BY mc.id_chat_receiver
@@ -94,7 +100,6 @@ BEGIN
     WHERE c.id_reciver = p_id_user
     ORDER BY ult.ultimo_mensaje DESC
     LIMIT 15;
-
 END;
 $$
 SECURITY DEFINER;

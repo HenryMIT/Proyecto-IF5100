@@ -18,7 +18,7 @@ COPY Postgres/script/restore.sh /usr/local/bin/restore.sh
 
 RUN chmod +x /usr/local/bin/backup_full.sh /usr/local/bin/backup_diff.sh
 
-RUN echo "*/5 * * * * bash /usr/local/bin/backup_full.sh >> /var/log/cron.log 2>&1" > /etc/cron.d/backup_full
+RUN echo "00 1 * * * bash /usr/local/bin/backup_full.sh >> /var/log/cron.log 2>&1" > /etc/cron.d/backup_full
 RUN chmod 0644 /etc/cron.d/backup_full
 
 RUN echo "*/10 * * * * bash pgbackrest --stanza=demo --type=diff backup" > /etc/cron.d/pgbackrest-diff
