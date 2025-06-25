@@ -1,35 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>My Contacts - CR Chat</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mis Contactos - CR Chat</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <!-- Contact list section -->
-        <div class="contact-list-section">
-            <h2>My Contacts</h2>
-            <ul id="contactList"></ul>
-        </div>
 
-        <!-- Form to add new contact -->
-        <div class="contact-form-section">
-            <h2>Add New Contact</h2>
-            <form id="contactForm">
-                <input type="hidden" id="userId" value="">
-                <label for="phone">Contact's Phone Number</label>
-                <input type="text" id="phone" placeholder="8888888" required>
+<div class="container">
+  <h2>Mis Contactos</h2>
+  <ul id="contactList">
+    <!-- Lista de contactos aquí -->
+  </ul>
 
-                <label for="contactName">Contact Name</label>
-                <input type="text" id="contactName" placeholder="Ana" required>
+  <h2>Añadir Nuevo Contacto</h2>
+  <form id="contactForm" autocomplete="off">
+    <input type="hidden" id="userId" value="" />
+    <label for="phone">Número de Teléfono</label>
+    <input type="text" id="phone" name="phone" placeholder="PhoneNumber" required />
 
-                <button type="submit">Add</button>
-                <button type="button" onclick="goBack()">Back</button>
-            </form>
-        </div>
-    </div>
+    <label for="contactName">Nombre del Contacto</label>
+    <input type="text" id="contactName" name="contactName" placeholder="NickName" required />
 
-    <script src="script.js"></script>
+    <button type="submit">Agregar</button>
+    <button type="button" onclick="goBack()">Volver</button>
+  </form>
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>

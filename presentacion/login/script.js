@@ -35,6 +35,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .then(data => {
+             // Guardar id_usr en localStorage
+            localStorage.setItem("userId", data.id_usr);
+             // (opcional) localStorage.setItem("token", data.token);
+
             alert("Login successful!");
             window.location.href = "../chat/chat.html";
         })

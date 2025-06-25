@@ -1,90 +1,103 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const userId = parseInt(localStorage.getItem("userId"));
+  // Obtener userId del localStorage
+  const userId = parseInt(localStorage.getItem("userId"));
 
-    if (!userId || isNaN(userId)) {
-        alert("No user ID found. Please log in again.");
-        window.location.href = "../login/login.html";
-        return;
-    }
+  if (!userId || isNaN(userId)) {
+    alert("No se encontró el ID de usuario. Por favor inicia sesión.");
+    window.location.href = "../login/login.html";
+    return;
+  }
 
-    document.getElementById("userId").value = userId;
-    loadContacts(userId);
-});
+  document.getElementById("userId").value = userId;
 
-function loadContacts(userId) {
-    fetch(`http://localhost:8000/api/contact/load?id_user=${userId}`)
-        .then(res => {
-            if (!res.ok) throw new Error("HTTP error " + res.status);
-            return res.json();
-        })
-        .then(data => {
-            const list = document.getElementById("contactList");
-            list.innerHTML = "";
+  // Cargar contactos al inicio
+  loadContacts(userId);
 
-            if (!Array.isArray(data)) {
-                console.warn("Unexpected response:", data);
-                alert("Failed to load contacts. Unexpected response.");
-                return;
-            }
-
-            data.forEach(contact => {
-                const li = document.createElement("li");
-                li.textContent = `${contact.contact_name} (${contact.contact_number})`;
-                list.appendChild(li);
-            });
-        })
-        .catch(err => {
-            console.error("Error loading contacts:", err);
-            alert("Failed to load contacts.");
-        });
-}
-
-document.getElementById("contactForm").addEventListener("submit", function (e) {
+  // Formulario para agregar contacto
+  document.getElementById("contactForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const userId = parseInt(document.getElementById("userId").value);
     const phone = document.getElementById("phone").value.trim();
     const name = document.getElementById("contactName").value.trim();
 
     if (!phone || !name) {
-        alert("Please fill in all fields.");
-        return;
+      alert("Por favor completa todos los campos.");
+      return;
     }
 
     fetch("http://localhost:8000/api/contact/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            id_user: userId,
-            contact_number: phone,
-            contact_name: name
-        })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        p_id_user: userId,
+        p_contact_number: phone,
+        p_contact_name: name
+      })
     })
-    .then(res => res.text()) // usamos text() primero para depurar mejor
-    .then(text => {
-        console.log("Raw response:", text);
-        let result;
-        try {
-            result = JSON.parse(text);
-        } catch (e) {
-            throw new Error("Failed to parse JSON: " + text);
+      .then(res => {
+        // Tu backend devuelve solo status, sin JSON en body
+        if (res.status === 204) return { result: 1 }; // éxito
+        if (res.status === 409) return { result: 0 }; // conflicto/error
+        throw new Error(`Respuesta inesperada: ${res.status}`);
+      })
+      .then(result => {
+        if (result.result === 1) {
+          alert("¡Contacto agregado exitosamente!");
+          loadContacts(userId);
+          document.getElementById("phone").value = "";
+          document.getElementById("contactName").value = "";
+        } else if (result.result === 0) {
+          alert("No se pudo agregar el contacto. Puede que ya exista o el número no esté registrado como usuario.");
         }
-
-        if (result === 1 || result.result === 1) {
-            alert("Contact added successfully!");
-            loadContacts(userId);
-        } else if (result === 0 || result.result === 0) {
-            alert("Contact could not be added. It may already exist or is invalid.");
-        } else {
-            alert("Unexpected result from server.");
-        }
-    })
-    .catch(err => {
-        console.error("Error adding contact:", err);
-        alert("Failed to add contact.");
-    });
+      })
+      .catch(err => {
+        console.error("Error al agregar contacto:", err);
+        alert("Error al agregar contacto.");
+      });
+  });
 });
 
+function loadContacts(userId) {
+  const params = new URLSearchParams({
+    p_lim: 100,
+    p_pag: 0,
+    p_phone_contact: "",
+    p_contact_name: "",
+    p_id_user: userId
+  }).toString();
+
+  fetch(`http://localhost:8000/api/contact/load?${params}`, {
+    method: "GET"
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Respuesta de red no OK");
+      return res.json().catch(() => []);
+    })
+    .then(data => {
+      if (!Array.isArray(data)) data = [];
+
+      const list = document.getElementById("contactList");
+      list.innerHTML = "";
+
+      if (data.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No se encontraron contactos.";
+        list.appendChild(li);
+        return;
+      }
+
+      data.forEach(contact => {
+        const li = document.createElement("li");
+        li.textContent = `${contact.contact_name} (${contact.contact_number})`;
+        list.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error("Error al cargar contactos:", err);
+      alert("No se pudieron cargar los contactos.");
+    });
+}
+
 function goBack() {
-    window.location.href = "../chat/chat.html";
+  window.location.href = "../chat/chat.html";
 }
