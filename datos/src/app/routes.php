@@ -29,6 +29,12 @@ $app->group('/api', function (RouteCollectorProxy $api) {
         $endpoint->patch('/delete', Contact::class . ':deleteContact');        
     });
     //Datos de Chats
+    $api->group('/chat', function(RouteCollectorProxy $endpoint){        
+        $endpoint->post('/create', Message::class . ':createChat');
+        $endpoint->get('/load', Message::class . ':loadChat');               
+    });
+
+    //Datos de mensajes
     $api->group('/message', function(RouteCollectorProxy $endpoint){        
         $endpoint->post('/send', Message::class . ':sendMessage');
         $endpoint->get('/load', Message::class . ':loadMessage');

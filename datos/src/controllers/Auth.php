@@ -55,6 +55,7 @@ class Auth extends Autenticar
             'iat' => time(),
             'exp' => time() + 300,
             'sub' => $id_usr,
+            'id_usr' => $id_usr,
             'num' => $phone_number,
             'name' => $username
         ];

@@ -9,7 +9,6 @@ use PDO;
 
 class Usr extends Autenticar
 {
-
     public function __construct(ContainerInterface $c)
     {
         $this->container = $c;
