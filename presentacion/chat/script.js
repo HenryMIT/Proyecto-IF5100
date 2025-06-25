@@ -7,3 +7,12 @@ function toggleProfile() {
     }
 }
 
+function goToContacts() {
+    window.location.href = "../contact/contact.html";
+}
+
+function logOut() {
+    // Puedes limpiar localStorage si guardaste token o ID del usuario
+    localStorage.clear();
+    window.location.href = "../login/login.html";
+}

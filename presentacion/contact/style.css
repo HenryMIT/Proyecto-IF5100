@@ -241,3 +241,43 @@ button:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     text-align: center;
 }
+
+/* CONTACT PAGE CONTAINER */
+.container {
+    width: 90%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    gap: 30px;
+}
+
+.contact-list-section, .contact-form-section {
+    width: 48%;
+}
+
+.contact-list-section h2,
+.contact-form-section h2 {
+    color: #2c5364;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+#contactList {
+    list-style: none;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#contactList li {
+    background-color: #f2f2f2;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 4px solid #2c5364;
+}
+

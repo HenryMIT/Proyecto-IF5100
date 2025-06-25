@@ -10,11 +10,17 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Validar si es email o número
+        const isEmail = usuario.includes("@");
+
         const data = {
-            phone_number: usuario, // la API espera phone_number
             pass: clave
         };
+
+        if (isEmail) {
+            data.email = usuario;
+        } else {
+            data.phone_number = usuario;
+        }
 
         fetch("http://localhost:8000/api/auth/login", {
             method: "PATCH",
@@ -30,12 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
             alert("Login successful!");
-
-            // Puedes guardar el token si lo necesitas
-            // localStorage.setItem("token", data.token);
-            // localStorage.setItem("id_usr", data.id_usr);
-
-            // Redirigir a la vista principal del chat
             window.location.href = "../chat/chat.html";
         })
         .catch(err => {
@@ -43,9 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Incorrect phone number/email or password.");
         });
     });
-});
 
-// Redirección a la vista de registro
-function goToSignUp() {
-    window.location.href = "../signUp/signUp.html";
-}
+    window.goToSignUp = function () {
+        window.location.href = "../signUp/signUp.html";
+    };
+});

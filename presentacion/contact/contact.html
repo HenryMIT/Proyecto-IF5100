@@ -2,26 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Contact - CR Chat</title>
+    <title>My Contacts - CR Chat</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Add New Contact</h1>
-        <form id="contactForm">
-            <label for="userId">Your ID</label>
-            <input type="text" id="userId" placeholder="8" required>
+    <div class="container">
+        <!-- Contact list section -->
+        <div class="contact-list-section">
+            <h2>My Contacts</h2>
+            <ul id="contactList"></ul>
+        </div>
 
-            <label for="phone">Contact's Phone Number</label>
-            <input type="text" id="phone" placeholder="8888888" required>
+        <!-- Form to add new contact -->
+        <div class="contact-form-section">
+            <h2>Add New Contact</h2>
+            <form id="contactForm">
+                <input type="hidden" id="userId" value="">
+                <label for="phone">Contact's Phone Number</label>
+                <input type="text" id="phone" placeholder="8888888" required>
 
-            <label for="contactName">Contact Name</label>
-            <input type="text" id="contactName" placeholder="Ana" required>
+                <label for="contactName">Contact Name</label>
+                <input type="text" id="contactName" placeholder="Ana" required>
 
-            <button type="submit">Add</button>
-            <button type="button" onclick="goBack()">Back</button>
-        </form>
+                <button type="submit">Add</button>
+                <button type="button" onclick="goBack()">Back</button>
+            </form>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
