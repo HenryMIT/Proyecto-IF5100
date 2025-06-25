@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - CR Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>My Profile</h1>
+        <form id="profileForm" enctype="multipart/form-data">
+            <div class="profile-photo">
+                <img id="previewPhoto" src="default-profile.png" alt="Profile Picture">
+                <input type="file" id="photoUpload" accept="image/*">
+            </div>
+
+            <label for="userId">Your ID</label>
+            <input type="text" id="userId" value="8" readonly>
+
+            <label for="username">Username</label>
+            <input type="text" id="username" value="Henry Gonzalez" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" value="Henrygonza3@gmail.com" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" value="61667580" required>
+
+            <button type="submit">Finish</button>
+            <button type="button" onclick="goBack()">Back</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

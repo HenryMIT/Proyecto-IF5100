@@ -20,7 +20,7 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
     .then(res => {
         if (res.status === 201) {
             alert("Registration successful!");
-            window.location.href = "../login.html";
+            window.location.href = "../login/login.html";
         } else if (res.status === 409) {
             alert("User already exists.");
         } else {
