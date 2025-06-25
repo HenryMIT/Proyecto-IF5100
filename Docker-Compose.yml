@@ -1,16 +1,22 @@
 services:
 
-  serverMYSQL: 
-    image: mysql:latest
-    container_name: serverMYSQL
+  servermysql:
+    build:
+      context: ./MySQLB
+      dockerfile: Dockerfile
+    container_name: servermysql
     environment:
       - MYSQL_DATABASE=CR_Chat
-      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=admin
     ports:
       - 3306:3306
     volumes:
-      - ./mysql:/var/lib/mysql
-      - ./db_dump:/docker-entrypoint-initdb.d
+      - ./MySQLB/mysqlData:/var/lib/mysql
+      - ./MySQLB/mysql-init:/docker-entrypoint-initdb.d
+      - ./MySQLB/backup:/backup
+      - ./MySQLB/logs:/var/log/mysqlbackup
 
   serverPG:
     image: cr_chat_postgresql
@@ -30,7 +36,6 @@ services:
       - ./Postgres/backup:/backup
       - ./Postgres/logs:/var/log
 
-  
   web-datos:
     container_name: servidor-datos
     volumes:
@@ -43,7 +48,18 @@ services:
       - 8000:80
     depends_on:
       - serverPG
-      - serverMYSQL
+      - servermysql
+  
+  presentacion:
+    container_name: servidor-presentacion
+    image: httpd:latest
+    volumes:
+      - ./presentacion:/usr/local/apache2/htdocs/
+    ports:
+      - 8001:80
+    depends_on:
+      - serverPG
+      - servermysql
 
 volumes:
   postgres:

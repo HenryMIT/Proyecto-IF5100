@@ -1,0 +1,32 @@
+/bin/sh: 1: root: not found
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+mysqldump: Got error: 2002: Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2) when trying to connect
+Backup realizado exitosamente: /backup/mysql_2025-06-25_2232.sql.gz
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+Esperando a que MySQL inicie... intento 1
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+MySQL está listo. Iniciando backup...
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+mysqldump: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES) when trying to connect
+Backup realizado exitosamente: /backup/mysql_2025-06-25_2252.sql.gz
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+MySQL está listo. Iniciando backup...
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+mysqldump: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES) when trying to connect
+Backup realizado exitosamente: /backup/mysql_2025-06-25_2254.sql.gz
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+mysqld is alive
+MySQL está listo. Iniciando backup...
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+mysqld is alive
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+Backup realizado exitosamente: /backup/mysql_2025-06-25_2256.sql.gz
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+mysqld is alive
+MySQL está listo. Iniciando backup...
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+mysqld is alive
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+Backup realizado exitosamente: /backup/mysql_2025-06-25_2258.sql.gz
