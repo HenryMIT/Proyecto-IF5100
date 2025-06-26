@@ -56,20 +56,22 @@ CREATE PROCEDURE sp_authorized_user(
   IN p_key VARCHAR(255)
 )
 BEGIN
-  DECLARE v_id_user INT;
+   DECLARE v_id_user INT;
   DECLARE bin_pass VARBINARY(64);
+  DECLARE bin_email VARBINARY(64);
 
   SET bin_pass = AES_ENCRYPT(p_pass, p_key);
+  SET bin_email = AES_ENCRYPT(p_phone_number, p_key);
 
-  -- Convertimos la contraseña a VARBINARY para comparar con la almacenada
+  -- Convertimos la contraseÃ±a a VARBINARY para comparar con la almacenada
   SELECT id_user INTO v_id_user
   FROM usr
-  WHERE phone_number = p_phone_number
+  WHERE phone_number = p_phone_number OR email = p_phone_number
     AND pass = bin_pass
     AND deleted = FALSE
   LIMIT 1;
 
-  -- Si no se encontró el usuario, se retorna -1
+  -- Si no se encontrÃ³ el usuario, se retorna -1
   IF v_id_user IS NULL THEN
     SET v_id_user = -1;
   END IF;

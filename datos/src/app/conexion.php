@@ -32,7 +32,7 @@ $container->set('data_base', function (ContainerInterface $c) {
     ];
 
 
-    $prefer = getPreferredDB();
+    $prefer = 'pg' ;//getPreferredDB();
     if ($prefer === 'pg') {
         try {
             $dsnPG = "pgsql:host=$conf->hostPG;dbname=$conf->db;connect_timeout=1";
@@ -49,13 +49,13 @@ $container->set('data_base', function (ContainerInterface $c) {
             die($error);
         }
     } else {
-        try {
-            $dsnPG = "pgsql:host=$conf->hostPG;dbname=$conf->db;connect_timeout=1";
-            $con = new PDO($dsnPG, $conf->usrPG, $conf->passPG, $opc);
-            setPreferredDB('pg');
-        } catch (PDOException $e) {
-            $error = 'Error connecting to PostgreSQL database: ' . $e->getMessage();
-        }
+        // try {
+        //     $dsnPG = "pgsql:host=$conf->hostPG;dbname=$conf->db;connect_timeout=1";
+        //     $con = new PDO($dsnPG, $conf->usrPG, $conf->passPG, $opc);
+        //     setPreferredDB('pg');
+        // } catch (PDOException $e) {
+        //     $error = 'Error connecting to PostgreSQL database: ' . $e->getMessage();
+        // }
         if ($con == null) {
             $dsnMYSQL = "mysql:host=$conf->hostMYSQL;dbname=$conf->db;connect_timeout=2";
             try {
