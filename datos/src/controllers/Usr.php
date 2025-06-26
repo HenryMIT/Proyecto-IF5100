@@ -116,5 +116,4 @@ class Usr extends Autenticar
         $con = null;
         return $response->withStatus($status);
     }
-
 }
