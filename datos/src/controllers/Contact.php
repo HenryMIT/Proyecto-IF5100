@@ -27,8 +27,7 @@ class Contact{
         $query=$con->prepare($sql);
         $query->bindParam(':id_usr', $body->id_usr, PDO::PARAM_INT);
         $query->bindParam(':contact_number', $body->contact_number, PDO::PARAM_STR);
-        $query->bindParam(':contact_name', $body->contact_name, PDO::PARAM_STR);
-        $query->bindParam(':key', $key_d, PDO::PARAM_STR);
+        $query->bindParam(':contact_name', $body->contact_name, PDO::PARAM_STR);        
         $query->execute();
 
         $res = $query->fetch(PDO::FETCH_NUM)[0];
@@ -57,8 +56,9 @@ class Contact{
                 $query->bindValue(":$key", "$value", PDO::PARAM_STR);
             }
             $query->bindParam(':id_user', $args['id_user'], PDO::PARAM_INT);
-            
-            $res = $query->fetch(PDO::FETCH_ASSOC);
+            $query->execute();
+
+            $res = $query->fetchAll();
             $status = $res > 0 ? 200 : 204;
 
             $query = null;

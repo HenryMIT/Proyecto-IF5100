@@ -24,7 +24,7 @@ $app->group('/api', function (RouteCollectorProxy $api) {
     //Datos de contactos
     $api->group('/contact', function(RouteCollectorProxy $endpoint){        
         $endpoint->post('/create', Contact::class . ':createContact');
-        $endpoint->get('/load', Contact::class . ':loadContact');
+        $endpoint->get('/load/{id_user}/{lim}/{pag}', Contact::class . ':loadContact');
         $endpoint->put('/update', Contact::class . ':updateContact');
         $endpoint->patch('/delete', Contact::class . ':deleteContact');        
     });
