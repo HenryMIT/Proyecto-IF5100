@@ -176,7 +176,7 @@ BEGIN
         pass = CASE 
             WHEN p_pass IS NOT NULL AND p_pass <> '' THEN pgp_sym_encrypt(p_pass, p_key) ELSE pass
         END,
-        p_phone_number = CASE 
+        phone_number = CASE 
             WHEN p_phone_number IS NOT NULL AND p_phone_number <> '' THEN p_phone_number ELSE phone_number
         END,        
         profile_picture = CASE 

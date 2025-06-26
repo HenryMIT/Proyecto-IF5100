@@ -88,7 +88,8 @@ class Usr extends Autenticar
     }
 
     public function update_User(Request $request, Response $response){
-        $body= json_decode($request->getBody());
+        
+        $body = json_decode($request->getBody()); 
         $key_d= $this->container->get('key_decript');
         $con= $this->container->get('data_base');        
         $dbtype = $con->getAttribute(PDO::ATTR_DRIVER_NAME);
@@ -96,17 +97,20 @@ class Usr extends Autenticar
         $sql .= '(:id_usr, :username, :pass, :phone_number, :profile_picture,:profile_description, :key)';
         
         $query = $con->prepare($sql);
-        $query->bindParam(':id_usr', $body->id_usr, PDO::PARAM_INT);
-        $query->bindParam(':username', $body->username, PDO::PARAM_STR);
-        $query->bindParam(':pass', $body->pass, PDO::PARAM_STR);
-        $query->bindParam(':phone_number', $body->phone_number, PDO::PARAM_STR);
-        $query->bindParam(':profile_picture', $body->profile_picture, PDO::PARAM_STR);
-        $query->bindParam(':profile_description', $body->profile_description, PDO::PARAM_STR);        
-        $query->bindParam(':key', $key_d, PDO::PARAM_STR);
+        
+        foreach ($body as $key => $value) {
+            if (is_integer($value)) {
+                $query->bindValue(":$key", $value, PDO::PARAM_INT);
+               
+            }else{
+                $query->bindValue(":$key", $value, PDO::PARAM_STR);                
+            }            
+        }      
+         $query->bindValue(':key', $key_d, PDO::PARAM_STR);
         $query->execute();
 
-        $res = $query->fetch(PDO::FETCH_NUM)[0];
-        $status = $res > 0 ? 200 : 204;
+        $res = $query->fetch(PDO::FETCH_NUM)[0];        
+        $status = $res > 0 ? 204 : 409;
         
         $query = null;
         $con = null;
