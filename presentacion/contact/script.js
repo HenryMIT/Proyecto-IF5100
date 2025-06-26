@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "../login/login.html";
         return;
     }
-    
+
     const params = new URLSearchParams(window.location.search);
     const filterName = params.get('contact_name') || "";
     const filterPhone = params.get('phone_contact') || "";
@@ -93,5 +93,5 @@ function loadContacts(userId, name = "", phone = "") {
 }
 
 function goBack() {
-    window.location.href = "../chat/chat.html";
+    window.location.href = "../chat_view/chat.html";
 }

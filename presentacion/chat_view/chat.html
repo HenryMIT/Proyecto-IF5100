@@ -11,12 +11,13 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <h2>CR Chat</h2>
-                  <button onclick="toggleProfile()">My Profile</button>
+                 <button onclick="goProfile()">My Profile</button>
                  <button onclick="goToContacts()">Contacts</button>
                  <button onclick="logOut()">Log out</button>
                 </div>
             <div class="chat-list">
                 <div class="chat-item">
+                    <p hidden class="hidden-chat-id">1</p>
                     <p class="chat-name">Maria Lopez</p>
                     <p class="chat-preview">Hey! How are you?</p>
                 </div>
@@ -47,18 +48,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Profile Modal -->
-    <div class="profile-modal" id="profileModal">
-        <div class="profile-content">
-            <h3>My Profile</h3>
-            <p><strong>Username:</strong> Henry Gonzalez</p>
-            <p><strong>Email:</strong> Henrygonza3@gmail.com</p>
-            <p><strong>Phone:</strong> 61667580</p>
-            <button onclick="toggleProfile()">Close</button>
-        </div>
-    </div>
-
+ 
     <script src="script.js"></script>
 </body>
 </html>
