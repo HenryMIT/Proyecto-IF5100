@@ -1,13 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
     const userId = parseInt(localStorage.getItem("userId"));
+    /*const filterName = params.get('contact_name') == null ? params.set('contact_name', "") : params.get('contact_name').trim();
+    const filterPhone = params.get('phone_contact') == null ? params.set('phone_contact', "") : params.get('phone_contact').trim();*/
+
     if (!userId || isNaN(userId)) {
         alert("User not logged in. Please log in again.");
         window.location.href = "../login/login.html";
         return;
     }
+    
+    const params = new URLSearchParams(window.location.search);
+    const filterName = params.get('contact_name') || "";
+    const filterPhone = params.get('phone_contact') || "";
 
     document.getElementById("userId").value = userId;
     document.getElementById("btnLoad").addEventListener("click", () => loadContacts(userId));
+
+    loadContacts(userId, filterName, filterPhone);
 
     document.getElementById("contactForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -42,40 +51,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function loadContacts(userId) {
+function loadContacts(userId, name = "", phone = "") {
     const limit = 100;
     const page = 0;
 
-    fetch(`http://localhost:8000/api/contact/load/${userId}/${limit}/${page}`, {
-        method: "GET"
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Failed to load contacts. Status: " + res.status);
-        return res.json();
-    })
-    .then(data => {
-        const list = document.getElementById("contactList");
-        list.innerHTML = "";
+    let url = `http://localhost:8000/api/contact/load/${userId}/${limit}/${page}`;
 
-        if (!Array.isArray(data) || data.length === 0) {
-            const li = document.createElement("li");
-            li.textContent = "No contacts found.";
-            list.appendChild(li);
-            return;
-        }
+    const queryParams = new URLSearchParams();
 
-        data.forEach(contact => {
-            const li = document.createElement("li");
-            li.textContent = `${contact.contact_name} (${contact.contact_number})`;
-            list.appendChild(li);
+    if (name) queryParams.append("contact_name", name);
+    if (phone) queryParams.append("phone_contact", phone);
+
+    if ([...queryParams].length > 0) url += "?" + queryParams.toString();
+
+    fetch(url, { method: "GET" })
+        .then(res => {
+            if (!res.ok) throw new Error("Failed to load contacts. Status: " + res.status);
+            return res.json();
+        })
+        .then(data => {
+            const list = document.getElementById("contactList");
+            list.innerHTML = "";
+
+            if (!Array.isArray(data) || data.length === 0) {
+                const li = document.createElement("li");
+                li.textContent = "No contacts found.";
+                list.appendChild(li);
+                return;
+            }
+
+            data.forEach(contact => {
+                const li = document.createElement("li");
+                li.textContent = `${contact.contact_name} (${contact.contact_number})`;
+                list.appendChild(li);
+            });
+        })
+        .catch(err => {
+            console.error("Error loading contacts:", err);
+            alert("Could not load contacts.");
         });
-    })
-    .catch(err => {
-        console.error("Error loading contacts:", err);
-        alert("Could not load contacts.");
-    });
 }
-
 
 function goBack() {
     window.location.href = "../chat/chat.html";

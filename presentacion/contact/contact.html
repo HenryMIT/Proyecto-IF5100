@@ -7,8 +7,19 @@
 </head>
 <body>
     <div class="container">
-        <h2>My Contacts</h2>
 
+      <h2>Search Contacts</h2>
+      <form id="searchForm">
+          <label for="searchName">Name:</label>
+          <input type="text" id="searchName" name="contact_name" placeholder="e.g. Ana Mora">
+
+          <label for="searchPhone">Phone:</label>
+          <input type="text" id="searchPhone" name="phone_contact" placeholder="e.g. 88888888">
+
+          <button type="submit">Search</button>
+      </form>
+
+        <h2>My Contacts</h2>
         <button id="btnLoad">Load Contacts</button>
         <ul id="contactList"></ul>
 
