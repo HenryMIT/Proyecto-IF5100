@@ -15,19 +15,19 @@ BEGIN
         ROLLBACK;
         SELECT -1 AS result; -- Error inesperado
     END;
+
     START TRANSACTION;
 
-    -- Si ya existe y no está eliminado
+    -- Contacto activo ya existe
     IF EXISTS (
         SELECT 1 FROM contact 
         WHERE id_user = p_id_user AND contact_number = p_contact_number AND deleted = FALSE
     ) THEN
         ROLLBACK;
-        SELECT 0 AS result; -- contacto ya existe y está activo    
-    END IF;
+        SELECT 0 AS result; -- Ya existe y está activo
 
-    -- Si existe pero está eliminado
-    IF EXISTS (
+    -- Contacto existe pero está eliminado
+    ELSEIF EXISTS (
         SELECT 1 FROM contact 
         WHERE id_user = p_id_user AND contact_number = p_contact_number AND deleted = TRUE
     ) THEN
@@ -36,20 +36,17 @@ BEGIN
         WHERE contact_number = p_contact_number AND id_user = p_id_user;
 
         COMMIT;
-        SELECT 1 AS result; -- contacto restaurado
-    END IF;
+        SELECT 1 AS result; -- Restaurado
 
-    -- Si no existe el número como usuario
-    IF NOT EXISTS (
+    -- Número no está registrado como usuario
+    ELSEIF NOT EXISTS (
         SELECT 1 FROM usr WHERE phone_number = p_contact_number
     ) THEN
         ROLLBACK;
-        SELECT 0 AS result; -- el número no está registrado como usuario
-    
-    END IF;
+        SELECT 0 AS result; -- Número no registrado
 
-    -- Si ya existía pero se necesita actualizar el nombre
-    IF EXISTS (
+    -- Contacto existe (nombre necesita actualización)
+    ELSEIF EXISTS (
         SELECT 1 FROM contact 
         WHERE contact_number = p_contact_number AND id_user = p_id_user
     ) THEN 
@@ -59,15 +56,17 @@ BEGIN
 
         COMMIT;
         SELECT 1 AS result;
+
+    -- Caso final: crear contacto nuevo
+    ELSE
+        INSERT INTO contact(id_user, contact_number, contact_name) 
+        VALUES(p_id_user, p_contact_number, p_contact_name);
+
+        COMMIT;
+        SELECT 1 AS result;
     END IF;
-
-    -- Crear contacto nuevo
-    INSERT INTO contact(id_user, contact_number, contact_name) 
-    VALUES(p_id_user, p_contact_number, p_contact_name);
-
-    COMMIT;
-    SELECT 1 AS result;
 END$$
+
 
 -- FUNCIÓN PARA CREAR CHAT
 CREATE PROCEDURE sp_create_chat(
@@ -127,12 +126,12 @@ BEGIN
     THEN
         SELECT id_contact, contact_number, contact_name
         FROM contact
-        WHERE deleted = FALSE AND id_usr = p_id_user
+        WHERE deleted = FALSE AND id_user = p_id_user
         LIMIT p_pag, p_lim;
     ELSE
-        SELECT id_contact, contact_number, contact_name
+        SELECT id_contact, id_user, contact_number, contact_name
         FROM contact
-        WHERE deleted = FALSE AND id_usr = p_id_user
+        WHERE deleted = FALSE AND id_user = p_id_user
           AND (
               (p_phone_contact IS NOT NULL AND contact_number LIKE CONCAT('%', p_phone_contact, '%'))
               OR
