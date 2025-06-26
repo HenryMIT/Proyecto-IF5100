@@ -66,7 +66,7 @@ BEGIN
   -- Convertimos la contraseÃ±a a VARBINARY para comparar con la almacenada
   SELECT id_user INTO v_id_user
   FROM usr
-  WHERE phone_number = p_phone_number OR email = p_phone_number
+  WHERE phone_number = p_phone_number OR email = bin_email
     AND pass = bin_pass
     AND deleted = FALSE
   LIMIT 1;
