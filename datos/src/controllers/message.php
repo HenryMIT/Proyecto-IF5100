@@ -92,7 +92,7 @@ class Message
         $body= json_decode($request->getBody());        
         $con= $this->container->get('data_base');        
         $dbtype = $con->getAttribute(PDO::ATTR_DRIVER_NAME);
-        $sql = $dbtype == 'pgsql'? 'SELECT * FROM fn_deleted_message':'CALL sp_deleted_message';
+        $sql = $dbtype == 'pgsql'? 'SELECT * FROM fn_deleted_message':'CALL sp_delete_message';
         $sql .= '(:id_message)';
 
         $query= $con->prepare($sql);
