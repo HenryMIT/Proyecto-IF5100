@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const userIdInput = document.getElementById('userId');
     const usernameInput = document.getElementById('username');
-    const emailInput = document.getElementById('email');
     const phoneInput = document.getElementById('phone');
     const passwordInput = document.getElementById('password');
     const profileDescInput = document.getElementById('profileDescription');
@@ -27,10 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             usernameInput.value = data.username || '';
-            emailInput.value = data.email || '';
             phoneInput.value = data.phone_number || '';
             profileDescInput.value = data.profile_description || '';
-            if (data.profile_picture) {
+            if (data.profile_picture != 'default') {
                 previewPhoto.src = data.profile_picture;
             }
         })
