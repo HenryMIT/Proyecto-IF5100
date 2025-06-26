@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Opcional: localStorage.setItem("token", data.token);
 
             alert("Login successful!");
-            window.location.href = "../chat/chat.html";
+            window.location.href = "../chat_view/chat.html";
         })
         .catch(err => {
             console.error("Login error:", err);

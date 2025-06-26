@@ -29,5 +29,5 @@ if (profileForm) {
 
 // Back button
 function goBack() {
-    window.location.href = 'chat.html';
+    window.location.href = '../chat_view/chat.html';
 }

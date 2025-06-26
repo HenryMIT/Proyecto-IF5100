@@ -59,7 +59,7 @@ function loadContacts(userId, name = "", phone = "") {
 }
 
 function goBack() {
-    window.location.href = "../chat/chat.html";
+    window.location.href = "../chat_view/chat.html";
 }
 
 document.getElementById("contactForm").addEventListener("submit", async (e) => {
