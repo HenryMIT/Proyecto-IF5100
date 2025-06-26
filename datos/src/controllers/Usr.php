@@ -100,8 +100,8 @@ class Usr extends Autenticar
         $query->bindParam(':username', $body->username, PDO::PARAM_STR);
         $query->bindParam(':pass', $body->pass, PDO::PARAM_STR);
         $query->bindParam(':phone_number', $body->phone_number, PDO::PARAM_STR);
-        $query->bindParam(':profile_picture', $body->phone_number, PDO::PARAM_STR);
-        $query->bindParam(':profile_description', $body->phone_number, PDO::PARAM_STR);        
+        $query->bindParam(':profile_picture', $body->profile_picture, PDO::PARAM_STR);
+        $query->bindParam(':profile_description', $body->profile_description, PDO::PARAM_STR);        
         $query->bindParam(':key', $key_d, PDO::PARAM_STR);
         $query->execute();
 
