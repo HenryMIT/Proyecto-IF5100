@@ -30,3 +30,10 @@ mysqladmin: [Warning] Using a password on the command line interface can be inse
 mysqld is alive
 mysqldump: [Warning] Using a password on the command line interface can be insecure.
 Backup realizado exitosamente: /backup/mysql_2025-06-25_2258.sql.gz
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+mysqld is alive
+MySQL está listo. Iniciando backup...
+mysqladmin: [Warning] Using a password on the command line interface can be insecure.
+mysqld is alive
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+Backup realizado exitosamente: /backup/mysql_2025-06-26_0700.sql.gz
