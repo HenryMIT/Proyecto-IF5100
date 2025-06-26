@@ -51,8 +51,8 @@ END $$
 
 -- Procedimiento para verificar si un usuario está autorizado
 CREATE PROCEDURE sp_authorized_user(
-  IN p_phone_number VARCHAR(20),
-  IN p_pass VARCHAR(64),
+  IN p_phone_number VARCHAR(255),
+  IN p_pass VARCHAR(255),
   IN p_key VARCHAR(255)
 )
 BEGIN

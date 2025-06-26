@@ -79,19 +79,19 @@ AS $$
 BEGIN
     IF (p_phone_contact IS NULL OR p_phone_contact = '') AND (p_contact_name IS NULL OR p_contact_name = '') THEN
         RETURN QUERY
-        SELECT id_contact, id_user, contact_number, contact_name, deleted
-        FROM contact
-        WHERE id_user = p_id_user
+        SELECT c.id_contact, c.id_user, c.contact_number, c.contact_name, c.deleted
+        FROM contact as c
+        WHERE c.id_user = p_id_user
         LIMIT p_lim;
     ELSE
         RETURN QUERY
-        SELECT id_contact, id_user, contact_number, contact_name, deleted
-        FROM contact
-        WHERE id_user = p_id_user
-        AND deleted = FALSE
+        SELECT c.id_contact, c.id_user, c.contact_number, c.contact_name, c.deleted
+        FROM contact as c
+        WHERE c.id_user = p_id_user 
+        AND c.deleted = FALSE
         AND (
-            (p_phone_contact IS NOT NULL AND contact_number ILIKE '%' || p_phone_contact || '%')
-            OR (p_contact_name IS NOT NULL AND contact_name ILIKE '%' || p_contact_name || '%')
+            (p_phone_contact IS NOT NULL AND c.contact_number ILIKE '%' || p_phone_contact || '%')
+            OR (p_contact_name IS NOT NULL AND c.contact_name ILIKE '%' || p_contact_name || '%')
         )
         LIMIT p_lim;
     END IF;
