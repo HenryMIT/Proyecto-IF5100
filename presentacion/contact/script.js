@@ -1,54 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
     const userId = parseInt(localStorage.getItem("userId"));
-    /*const filterName = params.get('contact_name') == null ? params.set('contact_name', "") : params.get('contact_name').trim();
-    const filterPhone = params.get('phone_contact') == null ? params.set('phone_contact', "") : params.get('phone_contact').trim();*/
+    const filterName = params.get('contact_name') == null ? params.set('contact_name', "") : params.get('contact_name').trim();
+    const filterPhone = params.get('phone_contact') == null ? params.set('phone_contact', "") : params.get('phone_contact').trim();
 
     if (!userId || isNaN(userId)) {
         alert("User not logged in. Please log in again.");
         window.location.href = "../login/login.html";
         return;
     }
-    
+
     const params = new URLSearchParams(window.location.search);
-    const filterName = params.get('contact_name') || "";
-    const filterPhone = params.get('phone_contact') || "";
 
     document.getElementById("userId").value = userId;
     document.getElementById("btnLoad").addEventListener("click", () => loadContacts(userId));
 
     loadContacts(userId, filterName, filterPhone);
-
-    document.getElementById("contactForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const phone = document.getElementById("phone").value.trim();
-        const name  = document.getElementById("contactName").value.trim();
-        if (!phone || !name) {
-            alert("Please fill in all fields.");
-            return;
-        }
-        
-        try {
-            const res = await fetch("http://localhost:8000/api/contact/create", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ id_usr: userId, contact_number: phone, contact_name: name })
-            });
-
-            if (res.status === 204) {
-                alert("Contact added successfully!");
-                document.getElementById("phone").value = "";
-                document.getElementById("contactName").value = "";
-                loadContacts(userId);
-            } else if (res.status === 409) {
-                alert("Cannot add contact: either exists already or the number is not registered.");
-            } else {
-                throw new Error("Unexpected status " + res.status);
-            }
-        } catch (err) {
-            console.error("Error adding contact:", err);
-            alert("Failed to add contact. Please try again.");
-        }
-    });
 });
 
 function loadContacts(userId, name = "", phone = "") {
@@ -95,3 +61,35 @@ function loadContacts(userId, name = "", phone = "") {
 function goBack() {
     window.location.href = "../chat/chat.html";
 }
+
+document.getElementById("contactForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const phone = document.getElementById("phone").value.trim();
+    const name = document.getElementById("contactName").value.trim();
+    if (!phone || !name) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    try {
+        const res = await fetch("http://localhost:8000/api/contact/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id_usr: userId, contact_number: phone, contact_name: name })
+        });
+
+        if (res.status === 204) {
+            alert("Contact added successfully!");
+            document.getElementById("phone").value = "";
+            document.getElementById("contactName").value = "";
+            loadContacts(userId);
+        } else if (res.status === 409) {
+            alert("Cannot add contact: either exists already or the number is not registered.");
+        } else {
+            throw new Error("Unexpected status " + res.status);
+        }
+    } catch (err) {
+        console.error("Error adding contact:", err);
+        alert("Failed to add contact. Please try again.");
+    }
+});

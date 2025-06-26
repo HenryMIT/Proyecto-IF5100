@@ -32,7 +32,7 @@ $container->set('data_base', function (ContainerInterface $c) {
     ];
 
 
-    $prefer = '';// getPreferredDB();
+    $prefer = 'pg';// getPreferredDB();
     if ($prefer === 'pg') {
         try {
             $dsnPG = "pgsql:host=$conf->hostPG;dbname=$conf->db;connect_timeout=1";
