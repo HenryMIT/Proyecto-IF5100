@@ -28,11 +28,11 @@ class Chat
 
         $query = $con->prepare($sql);
         $query->bindParam(':id_usr', $body->id_usr, PDO::PARAM_INT);
-        $query->bindParam(':id_contact', $body->id_usr, PDO::PARAM_INT);
+        $query->bindParam(':id_contact', $body->id_contact, PDO::PARAM_INT);
         $query->execute();
 
         $res = $query->fetch(PDO::FETCH_NUM)[0];
-        $status = $res > 0 ? 200 : 204;
+        $status = $res > 0 ? 204 : 404;
 
         $query = null;
         $con = null;
@@ -50,7 +50,7 @@ class Chat
         $query = $con->prepare($sql);
         $query->bindParam(':id_user', $args['id_user'], PDO::PARAM_INT);
         $query->execute();
-        $res = $query->fetch(PDO::FETCH_ASSOC);
+        $res = $query->fetchAll();
         $status = $res > 0 ? 200 : 204;
 
         $query = null;

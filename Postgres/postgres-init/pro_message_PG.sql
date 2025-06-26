@@ -83,22 +83,17 @@ AS $$
 BEGIN
     RETURN QUERY
     SELECT 
-        c.id_chat,
-        c.id_sender,
-        c.id_reciver,
-        c.id_contact,
-        ult.ultimo_mensaje
-    FROM chat c
-    JOIN (
-        SELECT 
-            mc.id_chat_receiver, 
-            MAX(mc.shipping_time) AS ultimo_mensaje
+        c.id_chat, 
+        c.id_sender, 
+        c.id_receiver, 
+        c.id_contact
+    FROM chat AS c
+    WHERE c.id_sender = p_id_user
+    ORDER BY (
+        SELECT MAX(mc.shipping_date) 
         FROM message_chat mc
-        WHERE mc.shipping_time >= CURRENT_DATE - INTERVAL '5 days'
-        GROUP BY mc.id_chat_receiver
-    ) ult ON ult.id_chat_receiver = c.id_chat
-    WHERE c.id_reciver = p_id_user
-    ORDER BY ult.ultimo_mensaje DESC
+        WHERE mc.id_chat_sender = c.id_chat OR mc.id_chat_receiver = c.id_chat
+    ) DESC
     LIMIT 15;
 END;
 $$

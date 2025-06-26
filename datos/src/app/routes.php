@@ -30,16 +30,16 @@ $app->group('/api', function (RouteCollectorProxy $api) {
     });
     //Datos de Chats
     $api->group('/chat', function(RouteCollectorProxy $endpoint){        
-        $endpoint->post('/create', Message::class . ':createChat');
-        $endpoint->get('/load', Message::class . ':loadChat');               
+        $endpoint->post('/create', Chat::class . ':createChat');
+        $endpoint->get('/load/{id_user}', Chat::class . ':loadChat');               
     });
 
     //Datos de mensajes
     $api->group('/message', function(RouteCollectorProxy $endpoint){        
         $endpoint->post('/send', Message::class . ':sendMessage');
-        $endpoint->get('/load', Message::class . ':loadMessage');
+        $endpoint->get('/load/{id_chat}', Message::class . ':loadMessage');
         $endpoint->put('/edit', Message::class . ':editMessage');
-        $endpoint->patch('/delete', Message::class . ':deleteMessage');        
+        $endpoint->delete('/delete/{id_message}', Message::class . ':deleteMessage');        
     });
 
 });
