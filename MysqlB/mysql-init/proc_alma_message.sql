@@ -77,14 +77,17 @@ BEGIN
         c.id_chat, 
         c.id_sender, 
         c.id_receiver, 
-        c.id_contact
+        c.id_contact,
+        co.contact_name,
+        co.contact_number
     FROM chat AS c
+    JOIN contact co ON co.id_contact = c.id_contact
     WHERE c.id_sender = p_id_user
     ORDER BY (
         SELECT MAX(shipping_date) 
         FROM message_chat 
         WHERE id_chat_sender = c.id_chat OR id_chat_receiver = c.id_chat
-    ) DESC
+    ) ASC
     LIMIT 15;
 END $$
 
@@ -99,7 +102,7 @@ BEGIN
     FROM message_chat
     WHERE (id_chat_sender = p_id_chat OR id_chat_receiver = p_id_chat)
       AND deleted = FALSE
-    ORDER BY shipping_date DESC
+    ORDER BY shipping_date ASC
     LIMIT 15;
 END $$
 

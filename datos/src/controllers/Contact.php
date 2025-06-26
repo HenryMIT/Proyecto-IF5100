@@ -78,13 +78,13 @@ class Contact{
         $sql .= '(:id_contact, :contact_number, :contact_name)';
         
         $query = $con->prepare($sql);
-        $query->bindParam(':id_contact', $body->id_usr, PDO::PARAM_INT);
+        $query->bindParam(':id_contact', $body->id_contact, PDO::PARAM_INT);
         $query->bindParam(':contact_number', $body->contact_number, PDO::PARAM_STR);
         $query->bindParam(':contact_name', $body->contact_name, PDO::PARAM_STR);        
         $query->execute();
 
         $res = $query->fetch(PDO::FETCH_NUM)[0];
-        $status = $res > 0 ? 200 : 204;
+        $status = $res > 0 ? 204 : 409;
         
         $query = null;
         $con = null;
@@ -92,18 +92,18 @@ class Contact{
     }
 
     public function deleteContact(Request $request, Response $response, $args){
-        $body= json_decode($request->getBody());        
+               
         $con= $this->container->get('data_base');        
         $dbtype = $con->getAttribute(PDO::ATTR_DRIVER_NAME);
         $sql = $dbtype == 'pgsql'? 'SELECT * FROM fn_deleted_contact':'CALL sp_deleted_contact';
         $sql .= '(:id_contact)';
 
         $query= $con->prepare($sql);
-        $query->bindParam(':id_contact', $body->id_usr, PDO::PARAM_INT);
+        $query->bindParam(':id_contact', $args['id_contact'], PDO::PARAM_INT);
         $query->execute();
 
         $res = $query->fetch(PDO::FETCH_NUM)[0];
-        $status = $res > 0 ? 200 : 204;
+        $status = $res > 0 ? 204 : 409;
         
         $query = null;
         $con = null;

@@ -26,7 +26,7 @@ $app->group('/api', function (RouteCollectorProxy $api) {
         $endpoint->post('/create', Contact::class . ':createContact');
         $endpoint->get('/load/{id_user}/{lim}/{pag}', Contact::class . ':loadContact');
         $endpoint->put('/update', Contact::class . ':updateContact');
-        $endpoint->patch('/delete', Contact::class . ':deleteContact');        
+        $endpoint->delete('/delete/{id_contact}', Contact::class . ':deleteContact');        
     });
     //Datos de Chats
     $api->group('/chat', function(RouteCollectorProxy $endpoint){        

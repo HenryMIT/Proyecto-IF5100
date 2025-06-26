@@ -31,14 +31,18 @@ document.addEventListener("DOMContentLoaded", function () {
             // Guardar id_usr en localStorage
             localStorage.setItem("userId", data.id_usr);
             // Opcional: localStorage.setItem("token", data.token);
-
             alert("Login successful!");
-            window.location.href = "../chat_view/chat.html";
+           
         })
         .catch(err => {
             console.error("Login error:", err);
             alert("Incorrect phone number/email or password.");
         });
+
+        if(localStorage.getItem('userId')){
+             window.location.href = "../chat_view/chat.html";
+        }
+
     });
 
     window.goToSignUp = function () {

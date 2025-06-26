@@ -74,9 +74,10 @@ CREATE OR REPLACE FUNCTION fn_load_chat(
 RETURNS TABLE (
     id_chat INT,
     id_sender INT,
-    id_reciver INT,
+    id_receiver INT,
     id_contact INT,
-    ultimo_mensaje TIMESTAMP
+    contact_name VARCHAR,
+    contact_number VARCHAR
 )
 LANGUAGE plpgsql
 AS $$
@@ -86,14 +87,17 @@ BEGIN
         c.id_chat, 
         c.id_sender, 
         c.id_receiver, 
-        c.id_contact
+        c.id_contact,
+        co.contact_name,
+		co.contact_number
     FROM chat AS c
+    JOIN contact co ON co.id_contact = c.id_contact
     WHERE c.id_sender = p_id_user
     ORDER BY (
         SELECT MAX(mc.shipping_date) 
         FROM message_chat mc
         WHERE mc.id_chat_sender = c.id_chat OR mc.id_chat_receiver = c.id_chat
-    ) DESC
+    ) ASC
     LIMIT 15;
 END;
 $$
@@ -125,7 +129,7 @@ BEGIN
     FROM message_chat AS m
     WHERE (m.id_chat_sender = p_id_chat OR m.id_chat_receiver = p_id_chat)
       AND m.deleted = FALSE
-    ORDER BY shipping_date DESC
+    ORDER BY shipping_date ASC
     LIMIT 15;
 END;
 $$

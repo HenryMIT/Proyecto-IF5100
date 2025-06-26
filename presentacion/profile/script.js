@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             phoneInput.value = data.phone_number || '';
             profileDescInput.value = data.profile_description || '';
             if (data.profile_picture != 'default') {
-                previewPhoto.src = data.profile_picture;
+                previewPhoto.src = '../assets/' + data.profile_picture;
             }
         })
         .catch(err => {
@@ -56,15 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const phone_number = phoneInput.value.trim();
         const profile_description = profileDescInput.value.trim();
         const pass = passwordInput.value.trim(); // vacío = no cambiar contraseña
-        let profile_picture = previewPhoto.src;
-
+        let urlPhoto = previewPhoto.src.split("assets/")[1];
+        profile_picture = urlPhoto;
+        
         if (!username || !phone_number) {
             alert('Username and phone number are required.');
             return;
-        }
-
-        if (profile_picture.includes('default-profile.png')) {
-            profile_picture = '';
         }
 
         const body = {
@@ -85,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.status === 204) {
                 alert('Profile updated successfully');
                 passwordInput.value = '';
+
             } else if (res.status === 409) {
                 alert('Failed to update profile. Please check your data.');
             } else {

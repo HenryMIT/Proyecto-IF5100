@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>CR Chat</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <div class="chat-app">
@@ -11,44 +11,29 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <h2>CR Chat</h2>
-                 <button onclick="goProfile()">My Profile</button>
-                 <button onclick="goToContacts()">Contacts</button>
-                 <button onclick="logOut()">Log out</button>
-                </div>
-            <div class="chat-list">
-                <div class="chat-item">
-                    <p hidden class="hidden-chat-id">1</p>
-                    <p class="chat-name">Maria Lopez</p>
-                    <p class="chat-preview">Hey! How are you?</p>
-                </div>
-                <div class="chat-item">
-                    <p class="chat-name">John Carter</p>
-                    <p class="chat-preview">Let’s meet tomorrow.</p>
-                </div>
-                <div class="chat-item">
-                    <p class="chat-name">Group - Project Team</p>
-                    <p class="chat-preview">Don’t forget the deadline!</p>
-                </div>
+                <button onclick="goProfile()">My Profile</button>
+                <button onclick="goToContacts()">Contacts</button>
+                <button onclick="logOut()">Log out</button>
+            </div>
+            <div class="chat-list" id="chatList">                
             </div>
         </div>
 
         <!-- Main chat window -->
-        <div class="chat-window">
+        <div class="chat-window" id="chatWindow">
             <div class="chat-header">
-                <h3>Maria Lopez</h3>
+                
             </div>
-            <div class="chat-messages">
-                <div class="message received">Hello Henry!</div>
-                <div class="message sent">Hi Maria, how are you?</div>
-                <div class="message received">I’m doing great, thanks!</div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be loaded here -->
             </div>
             <div class="chat-input">
-                <input type="text" placeholder="Type your message..." />
-                <button>Send</button>
+                <input type="text" id="messageInput" placeholder="Type your message..." />
+                <button onclick="sendMessage()">Send</button>
             </div>
         </div>
     </div>
- 
+
     <script src="script.js"></script>
 </body>
 </html>
