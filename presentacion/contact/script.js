@@ -1,103 +1,82 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Obtener userId del localStorage
-  const userId = parseInt(localStorage.getItem("userId"));
-
-  if (!userId || isNaN(userId)) {
-    alert("No se encontró el ID de usuario. Por favor inicia sesión.");
-    window.location.href = "../login/login.html";
-    return;
-  }
-
-  document.getElementById("userId").value = userId;
-
-  // Cargar contactos al inicio
-  loadContacts(userId);
-
-  // Formulario para agregar contacto
-  document.getElementById("contactForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const phone = document.getElementById("phone").value.trim();
-    const name = document.getElementById("contactName").value.trim();
-
-    if (!phone || !name) {
-      alert("Por favor completa todos los campos.");
-      return;
+    const userId = parseInt(localStorage.getItem("userId"));
+    if (!userId || isNaN(userId)) {
+        alert("User not logged in. Please log in again.");
+        window.location.href = "../login/login.html";
+        return;
     }
 
-    fetch("http://localhost:8000/api/contact/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        p_id_user: userId,
-        p_contact_number: phone,
-        p_contact_name: name
-      })
-    })
-      .then(res => {
-        // Tu backend devuelve solo status, sin JSON en body
-        if (res.status === 204) return { result: 1 }; // éxito
-        if (res.status === 409) return { result: 0 }; // conflicto/error
-        throw new Error(`Respuesta inesperada: ${res.status}`);
-      })
-      .then(result => {
-        if (result.result === 1) {
-          alert("¡Contacto agregado exitosamente!");
-          loadContacts(userId);
-          document.getElementById("phone").value = "";
-          document.getElementById("contactName").value = "";
-        } else if (result.result === 0) {
-          alert("No se pudo agregar el contacto. Puede que ya exista o el número no esté registrado como usuario.");
+    document.getElementById("userId").value = userId;
+    document.getElementById("btnLoad").addEventListener("click", () => loadContacts(userId));
+
+    document.getElementById("contactForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const phone = document.getElementById("phone").value.trim();
+        const name  = document.getElementById("contactName").value.trim();
+        if (!phone || !name) {
+            alert("Please fill in all fields.");
+            return;
         }
-      })
-      .catch(err => {
-        console.error("Error al agregar contacto:", err);
-        alert("Error al agregar contacto.");
-      });
-  });
+        
+        try {
+            const res = await fetch("http://localhost:8000/api/contact/create", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ id_usr: userId, contact_number: phone, contact_name: name })
+            });
+
+            if (res.status === 204) {
+                alert("Contact added successfully!");
+                document.getElementById("phone").value = "";
+                document.getElementById("contactName").value = "";
+                loadContacts(userId);
+            } else if (res.status === 409) {
+                alert("Cannot add contact: either exists already or the number is not registered.");
+            } else {
+                throw new Error("Unexpected status " + res.status);
+            }
+        } catch (err) {
+            console.error("Error adding contact:", err);
+            alert("Failed to add contact. Please try again.");
+        }
+    });
 });
 
 function loadContacts(userId) {
-  const params = new URLSearchParams({
-    p_lim: 100,
-    p_pag: 0,
-    p_phone_contact: "",
-    p_contact_name: "",
-    p_id_user: userId
-  }).toString();
+    const limit = 100;
+    const page = 0;
 
-  fetch(`http://localhost:8000/api/contact/load?${params}`, {
-    method: "GET"
-  })
+    fetch(`http://localhost:8000/api/contact/load/${userId}/${limit}/${page}`, {
+        method: "GET"
+    })
     .then(res => {
-      if (!res.ok) throw new Error("Respuesta de red no OK");
-      return res.json().catch(() => []);
+        if (!res.ok) throw new Error("Failed to load contacts. Status: " + res.status);
+        return res.json();
     })
     .then(data => {
-      if (!Array.isArray(data)) data = [];
+        const list = document.getElementById("contactList");
+        list.innerHTML = "";
 
-      const list = document.getElementById("contactList");
-      list.innerHTML = "";
+        if (!Array.isArray(data) || data.length === 0) {
+            const li = document.createElement("li");
+            li.textContent = "No contacts found.";
+            list.appendChild(li);
+            return;
+        }
 
-      if (data.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "No se encontraron contactos.";
-        list.appendChild(li);
-        return;
-      }
-
-      data.forEach(contact => {
-        const li = document.createElement("li");
-        li.textContent = `${contact.contact_name} (${contact.contact_number})`;
-        list.appendChild(li);
-      });
+        data.forEach(contact => {
+            const li = document.createElement("li");
+            li.textContent = `${contact.contact_name} (${contact.contact_number})`;
+            list.appendChild(li);
+        });
     })
     .catch(err => {
-      console.error("Error al cargar contactos:", err);
-      alert("No se pudieron cargar los contactos.");
+        console.error("Error loading contacts:", err);
+        alert("Could not load contacts.");
     });
 }
 
+
 function goBack() {
-  window.location.href = "../chat/chat.html";
+    window.location.href = "../chat/chat.html";
 }
