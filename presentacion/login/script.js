@@ -10,17 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const isEmail = usuario.includes("@");
-
         const data = {
+            phone_number: usuario,
             pass: clave
         };
-
-        if (isEmail) {
-            data.email = usuario;
-        } else {
-            data.phone_number = usuario;
-        }
 
         fetch("http://localhost:8000/api/auth/login", {
             method: "PATCH",
@@ -35,9 +28,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .then(data => {
-             // Guardar id_usr en localStorage
+            // Guardar id_usr en localStorage
             localStorage.setItem("userId", data.id_usr);
-             // (opcional) localStorage.setItem("token", data.token);
+            // Opcional: localStorage.setItem("token", data.token);
 
             alert("Login successful!");
             window.location.href = "../chat/chat.html";
