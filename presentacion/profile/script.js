@@ -1,94 +1,106 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const userId = document.getElementById('userId').value;
+    const userIdInput = document.getElementById('userId');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const passwordInput = document.getElementById('password');
+    const profileDescInput = document.getElementById('profileDescription');
+    const previewPhoto = document.getElementById('previewPhoto');
+    const photoUpload = document.getElementById('photoUpload');
+    const profileForm = document.getElementById('profileForm');
 
-    // Cargar perfil
-    fetch(`http://localhost/api/usr/loadProfile/${userId}`)
+    // Obtén el id guardado al hacer login
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        alert('No user ID found. Please log in.');
+        window.location.href = '../login/login.html';  // o donde vaya el login
+        return;
+    }
+
+    userIdInput.value = userId;
+
+    // Cargar datos del usuario desde backend
+    fetch(`http://localhost:8000/api/usr/loadProfile/${userId}`)
         .then(res => {
-            if (!res.ok) throw new Error("No se pudo cargar el perfil");
+            if (!res.ok) throw new Error('Failed to load profile');
             return res.json();
         })
         .then(data => {
-            document.getElementById('username').value = data.username || '';
-            document.getElementById('email').value = data.email || '';
-            document.getElementById('phone').value = data.phone_number || '';
-            // Si hay foto, cargarla
+            usernameInput.value = data.username || '';
+            emailInput.value = data.email || '';
+            phoneInput.value = data.phone_number || '';
+            profileDescInput.value = data.profile_description || '';
             if (data.profile_picture) {
-                document.getElementById('previewPhoto').src = data.profile_picture;
+                previewPhoto.src = data.profile_picture;
             }
         })
-        .catch(err => alert("Error al cargar el perfil: " + err.message));
+        .catch(err => {
+            alert('Error loading profile: ' + err.message);
+        });
 
-    // Vista previa de imagen
-    document.getElementById('photoUpload').addEventListener('change', function () {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('previewPhoto').src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+    // Preview imagen subida
+    photoUpload.addEventListener('change', () => {
+        const file = photoUpload.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            previewPhoto.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     });
 
-    // Guardar cambios
-    document.getElementById('profileForm').addEventListener('submit', function (e) {
+    // Enviar formulario
+    profileForm.addEventListener('submit', e => {
         e.preventDefault();
 
-        const id_usr = parseInt(document.getElementById('userId').value);
-        const username = document.getElementById('username').value;
-        const pass = ""; // Puedes agregar campo de contraseña si quieres
-        const phone_number = document.getElementById('phone').value;
-        const profile_description = "Perfil actualizado desde frontend"; // puedes hacer un campo si lo necesitas
+        const id_usr = parseInt(userIdInput.value);
+        const username = usernameInput.value.trim();
+        const phone_number = phoneInput.value.trim();
+        const profile_description = profileDescInput.value.trim();
+        const pass = passwordInput.value.trim(); // vacío = no cambiar contraseña
+        let profile_picture = previewPhoto.src;
 
-        const fileInput = document.getElementById('photoUpload');
-        let profile_picture = ""; // base64
-        if (fileInput.files.length > 0) {
-            const reader = new FileReader();
-            reader.onload = function () {
-                profile_picture = reader.result;
-
-                enviarActualizacion();
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        } else {
-            profile_picture = document.getElementById('previewPhoto').src;
-            enviarActualizacion();
+        if (!username || !phone_number) {
+            alert('Username and phone number are required.');
+            return;
         }
 
-        function enviarActualizacion() {
-            const body = {
-                id_usr,
-                username,
-                pass,
-                phone_number,
-                profile_picture,
-                profile_description
-            };
-
-            fetch('http://localhost/api/usr/update', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            })
-                .then(res => {
-                    if (res.status === 200) {
-                        alert('Perfil actualizado correctamente');
-                    } else {
-                        alert('No se pudo actualizar el perfil');
-                    }
-                })
-                .catch(err => alert('Error: ' + err.message));
+        if (profile_picture.includes('default-profile.png')) {
+            profile_picture = '';
         }
+
+        const body = {
+            id_usr,
+            username,
+            pass,
+            phone_number,
+            profile_picture,
+            profile_description
+        };
+
+        fetch('http://localhost:8000/api/usr/update', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+        .then(res => {
+            if (res.status === 204) {
+                alert('Profile updated successfully');
+                passwordInput.value = '';
+            } else if (res.status === 409) {
+                alert('Failed to update profile. Please check your data.');
+            } else {
+                alert('Unexpected server response: ' + res.status);
+            }
+        })
+        .catch(err => {
+            alert('Error updating profile: ' + err.message);
+        });
     });
 });
 
-function goBack() {
-    window.history.back();
-}
 
-// Back button
+// Botón volver
 function goBack() {
     window.location.href = '../chat_view/chat.html';
 }

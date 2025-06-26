@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>My Profile - CR Chat</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Edit Profile - CR Chat</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="login-container">
-        <h1>My Profile</h1>
-        <form id="profileForm" enctype="multipart/form-data">
-            <div class="profile-photo">
-                <img id="previewPhoto" src="default-profile.png" alt="Profile Picture">
-                <input type="file" id="photoUpload" accept="image/*">
-            </div>
+<div class="login-container">
+    <h1>Edit Profile</h1>
+    <form id="profileForm" enctype="multipart/form-data" autocomplete="off">
+        <div class="profile-photo">
+            <img id="previewPhoto" src="default-profile.png" alt="Profile Picture" />
+            <input type="file" id="photoUpload" accept="image/*" />
+        </div>
 
-            <label for="username">Username</label>
-            <input type="text" id="username" value="..." required>
+        <label for="userId">User ID</label>
+        <input type="text" id="userId" value="8" readonly />
 
-            <label for="email">Email</label>
-            <input type="email" id="email" value="..." required>
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Your username" required />
 
-            <label for="phone">Phone Number</label>
-            <input type="text" id="phone" value="..." required>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Your email" required disabled />
 
-            <button type="submit">Finish</button>
-            <button type="button" onclick="goBack()">Back</button>
-        </form>
-    </div>
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Leave blank to keep current" />
 
-    <script src="script.js"></script>
+        <label for="phone">Phone Number</label>
+        <input type="text" id="phone" placeholder="Your phone number" required />
+
+        <label for="profileDescription">Profile Description</label>
+        <textarea id="profileDescription" rows="3" placeholder="Describe yourself"></textarea>
+
+        <button type="submit">Update Profile</button>
+    </form>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
