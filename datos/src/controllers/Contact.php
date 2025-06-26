@@ -17,7 +17,6 @@ class Contact{
 
     public function createContact(Request $request, Response $response){
         $body= json_decode($request->getBody());
-        $key_d= $this->container->get('key_decript');
         $con= $this->container->get('data_base');        
         $dbtype = $con->getAttribute(PDO::ATTR_DRIVER_NAME);
         
