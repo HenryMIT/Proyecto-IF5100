@@ -49,17 +49,6 @@ services:
     depends_on:
       - serverPG
       - servermysql
-  
-  presentacion:
-    container_name: servidor-presentacion
-    image: httpd:latest
-    volumes:
-      - ./presentacion:/usr/local/apache2/htdocs/
-    ports:
-      - 8001:80
-    depends_on:
-      - serverPG
-      - servermysql
 
 volumes:
   postgres:

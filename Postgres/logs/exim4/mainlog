@@ -1,1 +1,16 @@
 
+2025-06-26 22:00:02 1uUudW-00001o-05 <= root@localhost U=root P=local S=689
+2025-06-26 22:00:02 1uUudW-00001o-05 => /var/mail/mail <root@localhost> R=mail4root T=address_file
+2025-06-26 22:00:02 1uUudW-00001o-05 Completed
+2025-06-26 22:05:02 1uUuiM-00001T-05 <= root@localhost U=root P=local S=2140
+2025-06-26 22:05:02 1uUuiL-00001S-37 <= root@localhost U=root P=local S=620
+2025-06-26 22:05:03 1uUuiM-00001T-05 => /var/mail/mail <root@localhost> R=mail4root T=address_file
+2025-06-26 22:05:04 1uUuiM-00001T-05 Completed
+2025-06-26 22:05:06 1uUuiL-00001S-37 => /var/mail/mail <root@localhost> R=mail4root T=address_file
+2025-06-26 22:05:06 1uUuiL-00001S-37 Completed
+2025-06-26 22:10:01 1uUunB-00002l-1m <= root@localhost U=root P=local S=2141
+2025-06-26 22:10:01 1uUunB-00002l-1m => /var/mail/mail <root@localhost> R=mail4root T=address_file
+2025-06-26 22:10:01 1uUunB-00002l-1m Completed
+2025-06-26 22:15:01 1uUus1-00002s-1t <= root@localhost U=root P=local S=2141
+2025-06-26 22:15:01 1uUus1-00002s-1t => /var/mail/mail <root@localhost> R=mail4root T=address_file
+2025-06-26 22:15:01 1uUus1-00002s-1t Completed

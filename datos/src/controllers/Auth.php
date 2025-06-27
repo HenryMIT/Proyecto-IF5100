@@ -97,7 +97,7 @@ class Auth extends Autenticar
 
     public function close(Request $request, Response $response, $args)
     {
-        $this->modifyToken(id_usr: $args['idUsuario']);
+        $this->modifyToken(id_usr: $args['id_usr']);
         return $response->withStatus(200);
     }
 

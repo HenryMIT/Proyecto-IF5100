@@ -10,7 +10,7 @@ RUN mkdir -p /backup /var/log/mysqlbackup
 COPY script/backup.sh /usr/local/bin/backup.sh
 RUN chmod +x /usr/local/bin/backup.sh
 
-RUN echo "00 1 * * * bash /usr/local/bin/backup.sh >> /var/log/mysqlbackup/cron.log 2>&1" > /etc/cron.d/mysql-backup && \
+RUN echo "*/10 * * * * bash /usr/local/bin/backup.sh >> /var/log/mysqlbackup/cron.log 2>&1" > /etc/cron.d/mysql-backup && \
     chmod 0644 /etc/cron.d/mysql-backup && \
     crontab /etc/cron.d/mysql-backup
 

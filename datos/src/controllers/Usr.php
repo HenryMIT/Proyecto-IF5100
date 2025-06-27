@@ -93,6 +93,7 @@ class Usr extends Autenticar
         $key_d= $this->container->get('key_decript');
         $con= $this->container->get('data_base');        
         $dbtype = $con->getAttribute(PDO::ATTR_DRIVER_NAME);
+        die($dbtype);
         $sql = $dbtype == 'pgsql'? 'SELECT * FROM fn_update_user':'CALL sp_update_user';
         $sql .= '(:id_usr, :username, :pass, :phone_number, :profile_picture,:profile_description, :key)';
         

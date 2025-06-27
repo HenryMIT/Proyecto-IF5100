@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const userId = parseInt(localStorage.getItem("userId"));
 
     if (!userId || isNaN(userId)) {
-        alert("User not logged in. Please log in again.");
+       
         window.location.href = "../login/login.html";
         return;
     }
@@ -48,7 +48,7 @@ function loadChats(userId) {
         })
         .catch(err => {
             console.error("Error loading chats:", err);
-            alert("Could not load chats.");
+            
         });
 }
 
@@ -114,7 +114,7 @@ function loadAllMessages() {
     const chatId = localStorage.getItem("chatId");
 
     if (!chatId) {
-        alert("No chat selected. Please select a chat first.");
+        
         return;
     }
 
@@ -145,9 +145,9 @@ function loadAllMessages() {
                 messageElement.classList.add("message");
 
                 // Definir si el mensaje es enviado o recibido
-                if (message.id_chat_sender === parseInt(localStorage.getItem("userId"))) {
+                if (message.id_chat_sender === parseInt(localStorage.getItem("chatId"))) {                    
                     messageElement.classList.add("sent");
-                } else {
+                } else {                    
                     messageElement.classList.add("received");
                 }
 
@@ -171,7 +171,7 @@ function sendMessage() {
     const message = messageInput.value.trim();
 
     if (!message) {
-        alert('Please type a message.');
+        
         return;
     }
 
@@ -179,7 +179,7 @@ function sendMessage() {
     const userId = parseInt(localStorage.getItem("userId"));
 
     if (!userId || isNaN(userId)) {
-        alert("User not logged in. Please log in again.");
+        
         window.location.href = "../login/login.html";
         return;
     }
@@ -234,7 +234,7 @@ function sendMessageToDatabase(messageData) {
         })
         .catch(error => {
             console.error("Error sending message:", error);
-            alert("Failed to send message. Please try again.");
+            
         });
 }
 
@@ -266,7 +266,9 @@ function goToContacts() {
 }
 
 function logOut() {
-    localStorage.clear();
+    localStorage.clear()
+    
+    ;
     window.location.href = "../login/login.html";
 }
 

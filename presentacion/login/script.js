@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    if (localStorage.getItem("userId")) {
+        window.location.href = "../chat_view/chat.html";
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const usuario = document.getElementById('usuario').value.trim();
@@ -20,28 +24,25 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         })
-        .then(res => {
-            if (res.status === 200) {
-                return res.json();
-            } else {
-                throw new Error("Invalid credentials");
-            }
-        })
-        .then(data => {
-            // Guardar id_usr en localStorage
-            localStorage.setItem("userId", data.id_usr);
-            // Opcional: localStorage.setItem("token", data.token);
-            alert("Login successful!");
-           
-        })
-        .catch(err => {
-            console.error("Login error:", err);
-            alert("Incorrect phone number/email or password.");
-        });
+            .then(res => {
+                if (res.status === 200) {
+                    return res.json();
+                } else {
+                    throw new Error("Invalid credentials");
+                }
+            })
+            .then(data => {
+                // Guardar id_usr en localStorage
+                localStorage.setItem("userId", data.id_usr);
+                // Opcional: localStorage.setItem("token", data.token);
+                alert("Login successful!");
 
-        if(localStorage.getItem('userId')){
-             window.location.href = "../chat_view/chat.html";
-        }
+            })
+            .catch(err => {
+                console.error("Login error:", err);
+                alert("Incorrect phone number/email or password.");
+            });
+
 
     });
 

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterPhone = params.get('phone_contact') || '';
 
     if (!userId || isNaN(userId)) {
-        alert("User not logged in. Please log in again.");
+        
         window.location.href = "../login/login.html";
         return;
     }
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const phone = document.getElementById("phone").value.trim();
         const name = document.getElementById("contactName").value.trim();
         if (!phone || !name) {
-            alert("Please fill in all fields.");
+            
             return;
         }
 
@@ -122,7 +122,7 @@ function editContact(id_contact, contact_name, contact_number) {
         const updatedPhone = document.getElementById("editPhone").value.trim();
 
         if (!updatedName || !updatedPhone) {
-            alert("Please fill in all fields.");
+            
             return;
         }
 
@@ -202,7 +202,7 @@ function startChat(id_contact) {
     const userId = parseInt(localStorage.getItem("userId"));
     const ok = false;
     if (!userId || isNaN(userId)) {
-        alert("User not logged in. Please log in again.");
+        
         window.location.href = "../login/login.html";
         return;
     }
@@ -233,13 +233,9 @@ function startChat(id_contact) {
     })
     .catch(error => {
         console.error("Error starting chat:", error);
-        alert("Failed to start chat. Please try again.");
+        
     });
-   
-    if (!ok) {
-        alert('cambio ventana')
-         window.location.href = "../chat_view/chat.html";
-    }
+       
 }
 
 function goBack() {
@@ -276,6 +272,6 @@ function deleteContact(id_contact) {
     })
     .catch(error => {
         console.error("Error deleting contact:", error);
-        alert("Failed to delete contact. Please try again.");
+        
     });
 }

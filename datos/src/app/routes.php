@@ -10,7 +10,7 @@ $app->group('/api', function (RouteCollectorProxy $api) {
     //Autorizador 
     $api->group('/auth', function (RouteCollectorProxy $auth) {
         $auth->patch('/login', Auth::class . ':starts');//X
-        $auth->patch('/logout/{idUsuario}', Auth::class . ':close');//X
+        $auth->patch('/logout/{id_user}', Auth::class . ':close');//X
         $auth->patch('/refresh', Auth::class . ':refresh');//X
         $auth->post('/register', Auth::class . ':register');//X
     });

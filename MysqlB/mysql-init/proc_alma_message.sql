@@ -98,7 +98,7 @@ CREATE PROCEDURE sp_load_message(
     IN p_key VARCHAR(50)
 )
 BEGIN
-    SELECT id_message, id_chat_sender, id_chat_receiver, shipping_date, delivery_date, media_content, CAST(aes_decrypt(text_message, p_key)as character) as text, deleted, delivered, seen
+    SELECT id_message, id_chat_sender, id_chat_receiver, shipping_date, delivery_date, media_content, CAST(aes_decrypt(text_message, p_key)as character) as media_content, deleted, delivered, seen
     FROM message_chat
     WHERE (id_chat_sender = p_id_chat OR id_chat_receiver = p_id_chat)
       AND deleted = FALSE
